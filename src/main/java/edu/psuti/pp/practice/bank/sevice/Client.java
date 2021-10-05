@@ -24,7 +24,7 @@ public interface Client {
     ArrayList<Account> getCreditList();
 
     // метод, возвращающий суммарный остаток на всех дебетовых счетах
-    double getDebitOst();
+    double getDebitBalance();
 
     // метод, возвращающий сумму долга клиента (сумма начисленных процентов
     // и комиссионных по всем кредитным счетам, а также отрицательный остаток по картам)
@@ -32,7 +32,7 @@ public interface Client {
 
     // метод, возвращающий список (класс ArrayList<Account>) счетов с
     // положительным остатком на счете
-    ArrayList<Account> getPositiveSummaryOst();
+    ArrayList<Account> getPositiveSummaryBalance();
 
     // метод удаления счета по его номеру
     void delBill(int number);

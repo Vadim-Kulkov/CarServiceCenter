@@ -5,8 +5,6 @@
 
 package edu.psuti.pp.practice.bank.main;
 
-import java.lang.reflect.Method;
-
 /*
 Этот класс не добавляет свои методы и поля, и не переопределяет методы и поля
 суперкласса. Класс определяет аналогичные суперклассу конструкторы, в которых
@@ -15,22 +13,22 @@ import java.lang.reflect.Method;
 public class DebitAccount extends Account {
 
     public DebitAccount(int number) {
-        super(number);
+        this(number, default_balance, default_commission, default_valut);
     }
 
-    public DebitAccount(int number, double ost) {
-        super(number, ost);
+    public DebitAccount(int number, double balance) {
+        this(number, balance, default_commission, default_valut);
     }
 
-    public DebitAccount(int number, double ost, double comiss) {
-        super(number, ost, comiss);
+    public DebitAccount(int number, double balance, double commission) {
+        this(number, balance, commission, default_valut);
     }
 
     public DebitAccount(int number,
-                        double ost,
-                        double comiss,
+                        double balance,
+                        double commission,
                         Currency valut) {
-        super(number, ost, comiss, valut);
+        super(number, balance, commission, valut);
     }
 
     @Override
@@ -43,13 +41,13 @@ public class DebitAccount extends Account {
         }
 
         DebitAccount debAcc = (DebitAccount) obj;
-        if (debAcc.getOst() != getOst()) {
+        if (debAcc.getBalance() != getBalance()) {
             return false;
         }
-        if (debAcc.getComiss() != getComiss()) {
+        if (debAcc.getCommission() != getCommission()) {
             return false;
         }
-        if (debAcc.getNumber() != getNumber()) {
+        if (debAcc.getId() != getId()) {
             return false;
         }
         return debAcc.getValut() == getValut();
@@ -58,42 +56,12 @@ public class DebitAccount extends Account {
     @Override
     public int hashCode() {
         int number = 1_111_111_111;
-        number ^= Double.hashCode(getOst());
-        number ^= getNumber();
-        number ^= Double.hashCode(getComiss());
+        number ^= Double.hashCode(getBalance());
+        number ^= getId();
+        number ^= Double.hashCode(getCommission());
         number ^= (getValut() == null) ? 0 : getValut().hashCode();
         return number;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder answer = new StringBuilder();
-        Class account = DebitAccount.class;
-        Method[] methods = account.getDeclaredMethods();
 
-        answer.append(getClass())
-                .append('\n');
-
-        answer.append("private int number: ")
-                .append(getNumber())
-                .append('\n');
-
-        answer.append("protected long ost: ")
-                .append(getOst())
-                .append('\n');
-
-        answer.append("private long comiss: ")
-                .append(getComiss())
-                .append('\n');
-
-        answer.append("private Currency valut: ")
-                .append(getValut())
-                .append('\n');
-
-        for (Method i : methods) {
-            answer.append(i)
-                    .append('\n');
-        }
-        return answer.toString();
-    }
 }

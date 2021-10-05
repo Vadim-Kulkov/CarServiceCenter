@@ -5,8 +5,6 @@
 
 package edu.psuti.pp.practice.bank.exceptions;
 
-import java.lang.reflect.Method;
-
 public class InsufficientFundsException extends Exception {
 
     @Override
@@ -17,12 +15,8 @@ public class InsufficientFundsException extends Exception {
 
     @Override
     public String toString() {
-        StringBuilder answer = new StringBuilder();
-        Class account = InsufficientFundsException.class;
-        Method[] methods = account.getDeclaredMethods();
-        for (Method i : methods) {
-            answer.append(i).append('\n');
-        }
-        return answer.toString();
+        final StringBuilder sb = new StringBuilder("InsufficientFundsException{");
+        sb.append('}');
+        return sb.toString();
     }
 }

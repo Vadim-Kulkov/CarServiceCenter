@@ -7,11 +7,10 @@ package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.exceptions.InsufficientFundsException;
 
-import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreditAccount extends Account {
+public class CreditAccount<default_percentSt> extends Account {
 
     // процентная ставка
     private double percentSt;
@@ -20,34 +19,37 @@ public class CreditAccount extends Account {
     // начисленные проценты
     private double assessedPercent;
     // начисленные комиссионные
-    private double assessedComission;
+    private double assessedCommission;
 
-    public CreditAccount(int number) {
-        super(number);
+    private static final double default_percentSt = 0;
+    private static final double default_creditLimit = 0;
+
+    public CreditAccount(int id) {
+        this(id, default_balance, default_commission, default_valut, default_percentSt, default_creditLimit);
     }
 
-    public CreditAccount(int number, double ost) {
-        super(number, ost);
+    public CreditAccount(int id, double balance) {
+        this(id, balance, default_commission, default_valut, default_percentSt, default_creditLimit);
     }
 
-    public CreditAccount(int number, double ost, double comiss) {
-        super(number, ost, comiss);
+    public CreditAccount(int id, double balance, double commission) {
+        this(id, balance, commission, default_valut, default_percentSt, default_creditLimit);
     }
 
-    public CreditAccount(int number,
-                         double ost,
-                         double comiss,
+    public CreditAccount(int id,
+                         double balance,
+                         double commission,
                          Currency valut) {
-        super(number, ost, comiss, valut);
+        this(id, balance, commission, valut, default_percentSt, default_creditLimit);
     }
 
-    public CreditAccount(int number,
-                         double ost,
-                         double comiss,
+    public CreditAccount(int id,
+                         double balance,
+                         double commission,
                          Currency valut,
                          double percentSt,
                          double creditLimit) {
-        super(number, ost, comiss, valut);
+        super(id, balance, commission, valut);
         this.percentSt = percentSt;
         this.creditLimit = creditLimit;
     }
@@ -80,44 +82,47 @@ public class CreditAccount extends Account {
     }
 
     // начисленные комиссионные
-    public double getAssessedComission() {
-        return assessedComission;
+    public double getAssessedCommission() {
+        return assessedCommission;
     }
 
-    public void setAssessedComission(double assessedComission) {
-        this.assessedComission = assessedComission;
+    public void setAssessedCommission(double assessedComission) {
+        this.assessedCommission = assessedComission;
     }
 
     // метод начисления процентов
     public void accrualPercent() {
-        if (getOst() < getCreditLimit()) {
-            assessedPercent += (creditLimit - getOst()) * (percentSt / actualDaysOfYear() / 100.0);
+        if (getBalance() < getCreditLimit()) {
+            assessedPercent += (creditLimit - getBalance()) * (percentSt / actualDaysOfYear() / 100.0);
         } else {
-            assessedPercent += (getOst() * percentSt) / 100;
+            assessedPercent += (getBalance() * percentSt) / 100;
         }
     }
 
     @Override
-    public void comissFromOst() {
-        assessedComission += getComiss();
+    public void commissionFromBalance() throws InsufficientFundsException {
+        if (getCommission() > getBalance()) {
+            throw new InsufficientFundsException();
+        }
+        balance -= getCommission();
     }
 
     @Override
-    public void popOst(double value) {
+    public void popBalance(double value) {
         try {
-            if (value > creditLimit | value > ost) {
+            if (value > creditLimit | value > balance) {
                 throw new InsufficientFundsException();
             }
             if (value == 0) {
                 return;
             }
-            if (assessedComission > 0) {
-                if (assessedComission >= value) {
-                    assessedComission -= value;
+            if (assessedCommission > 0) {
+                if (assessedCommission >= value) {
+                    assessedCommission -= value;
                     return;
                 } else {
-                    value -= assessedComission;
-                    assessedComission = 0;
+                    value -= assessedCommission;
+                    assessedCommission = 0;
                 }
             }
             if (value != 0 && assessedPercent > 0) {
@@ -130,7 +135,7 @@ public class CreditAccount extends Account {
                 }
             }
             if (value != 0) {
-                ost -= doubleToLong(value);
+                balance -= doubleToLong(value);
             }
         } catch (InsufficientFundsException e) {
             System.out.println(e.getMessage());
@@ -153,13 +158,13 @@ public class CreditAccount extends Account {
         }
 
         CreditAccount debAcc = (CreditAccount) obj;
-        if (debAcc.getOst() != getOst()) {
+        if (debAcc.getBalance() != getBalance()) {
             return false;
         }
-        if (debAcc.getComiss() != getComiss()) {
+        if (debAcc.getCommission() != getCommission()) {
             return false;
         }
-        if (debAcc.getNumber() != getNumber()) {
+        if (debAcc.getId() != getId()) {
             return false;
         }
         if (debAcc.getValut() != getValut()) {
@@ -175,70 +180,32 @@ public class CreditAccount extends Account {
         if (debAcc.getAssessedPercent() != getAssessedPercent()) {
             return false;
         }
-        return debAcc.getAssessedComission() == getAssessedComission();
+        return debAcc.getAssessedCommission() == getAssessedCommission();
     }
 
     @Override
     public int hashCode() {
         int number = 1_111_111_111;
-        number ^= Double.hashCode(getOst());
-        number ^= getNumber();
-        number ^= Double.hashCode(getComiss());
+        number ^= Double.hashCode(getBalance());
+        number ^= getId();
+        number ^= Double.hashCode(getCommission());
         number ^= (getValut() == null) ? 0 : getValut().hashCode();
 
         number ^= Double.hashCode(getPercentSt());
         number ^= Double.hashCode(getCreditLimit());
         number ^= Double.hashCode(getAssessedPercent());
-        number ^= Double.hashCode(getAssessedComission());
+        number ^= Double.hashCode(getAssessedCommission());
         return number;
     }
 
     @Override
     public String toString() {
-        StringBuilder answer = new StringBuilder();
-
-        Class account = CreditAccount.class;
-        Method[] methods = account.getDeclaredMethods();
-
-        answer.append(getClass()).append('\n');
-
-        answer.append("private int number: ")
-                .append(getNumber())
-                .append('\n');
-
-        answer.append("protected long ost: ")
-                .append(getOst())
-                .append('\n');
-
-        answer.append("private long comiss: ")
-                .append(getComiss())
-                .append('\n');
-
-        answer.append("private Currency.valut: ")
-                .append(getValut())
-                .append('\n');
-
-        answer.append("private double percentSt: ")
-                .append(getPercentSt())
-                .append('\n');
-
-        answer.append("private double creditLimit: ")
-                .append(getCreditLimit())
-                .append('\n');
-
-        answer.append("private double assessedPercent: ")
-                .append(getAssessedPercent())
-                .append('\n');
-
-        answer.append("private double assessedComission: ")
-                .append(getAssessedComission())
-                .append('\n');
-
-        for (Method i : methods) {
-            answer.append(i);
-            answer.append('\n');
-        }
-        return answer.toString();
+        final StringBuilder sb = new StringBuilder("CreditAccount{");
+        sb.append("percentSt=").append(percentSt);
+        sb.append(", creditLimit=").append(creditLimit);
+        sb.append(", assessedPercent=").append(assessedPercent);
+        sb.append(", assessedCommission=").append(assessedCommission);
+        sb.append('}');
+        return sb.toString();
     }
-
 }

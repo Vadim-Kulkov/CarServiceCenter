@@ -5,8 +5,6 @@
 
 package edu.psuti.pp.practice.bank.main;
 
-import java.lang.reflect.Method;
-
 // Этот класс нужно использовать для генерации номеров счетов
 public class AccountNumberGenerator {
 
@@ -26,22 +24,8 @@ public class AccountNumberGenerator {
 
     @Override
     public String toString() {
-        StringBuilder answer = new StringBuilder();
-        Class account = Account.class;
-        Method[] methods = account.getDeclaredMethods();
-
-        answer.append(getClass());
-        answer.append('\n');
-
-        answer.append("private static int num: ");
-        answer.append(num);
-        answer.append('\n');
-
-
-        for (Method i : methods) {
-            answer.append(i);
-            answer.append('\n');
-        }
-        return answer.toString();
+        final StringBuilder sb = new StringBuilder("AccountNumberGenerator{");
+        sb.append('}');
+        return sb.toString();
     }
 }

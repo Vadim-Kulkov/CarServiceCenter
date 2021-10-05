@@ -7,24 +7,19 @@ package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.sevice.Client;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class NaturalClient implements Client {
 
     private final ArrayList<Account> bills; // Массив счетов
-
+    private final static ArrayList<Account> default_accounts = new ArrayList<>();
     private final String Name;
     private final String Familia;
     private final int Seria;  // Серия паспорт
     private final int Number; // номер паспорта
 
     public NaturalClient(String Name, String Familia, int Seria, int Number) {
-        this.Name = Name;
-        this.Familia = Familia;
-        this.Seria = Seria;
-        this.Number = Number;
-        bills = new ArrayList<>(0);
+        this(Name, Familia, Seria, Number, default_accounts);
     }
 
     public NaturalClient(String Name, String Familia, int Seria, int Number, ArrayList<Account> bills) {
@@ -39,7 +34,7 @@ public class NaturalClient implements Client {
     @Override
     public Account clientLink(int Number) throws NullPointerException {
         for (Account bill : bills) {
-            if (bill.getNumber() == Number)
+            if (bill.getId() == Number)
                 return bill;
         }
         return null;
@@ -77,11 +72,11 @@ public class NaturalClient implements Client {
 
     // метод, возвращающий суммарный остаток на всех дебетовых счетах
     @Override
-    public double getDebitOst() {
+    public double getDebitBalance() {
         double result = 0.0;
         for (Account i : bills) {
             if (i instanceof DebitAccount) {
-                result += i.getOst();
+                result += i.getBalance();
             }
         }
         return result;
@@ -95,10 +90,10 @@ public class NaturalClient implements Client {
         for (Account i : bills) {
             if (i instanceof CreditAccount) {
                 result += ((CreditAccount) i).getAssessedPercent() +
-                        (((CreditAccount) i).getAssessedComission());
+                        (((CreditAccount) i).getAssessedCommission());
             }
-            if (i.getOst() < 0.1) {
-                result += i.getOst();
+            if (i.getBalance() < 0.1) {
+                result += i.getBalance();
             }
         }
         return result;
@@ -107,21 +102,21 @@ public class NaturalClient implements Client {
     // метод, возвращающий список (класс ArrayList<Account>) счетов с
     //   положительным остатком на счете
     @Override
-    public ArrayList<Account> getPositiveSummaryOst() {
-        ArrayList<Account> summaryPositiveOst = new ArrayList<>();
+    public ArrayList<Account> getPositiveSummaryBalance() {
+        ArrayList<Account> summaryPositiveBalance = new ArrayList<>();
         for (Account i : bills) {
-            if (i.getOst() > 0.0) {
-                summaryPositiveOst.add(i);
+            if (i.getBalance() > 0.0) {
+                summaryPositiveBalance.add(i);
             }
         }
-        return summaryPositiveOst;
+        return summaryPositiveBalance;
     }
 
     // метод удаления счета по его номеру
     @Override
     public void delBill(int number) {
         for (int i = 0; i < bills.size(); i++) {
-            if (bills.get(i).getNumber() == number) {
+            if (bills.get(i).getId() == number) {
                 bills.remove(i);
                 break;
             }
@@ -139,8 +134,8 @@ public class NaturalClient implements Client {
     @Override
     public void decreaseBill(int number, double value) {
         for (Account bill : bills) {
-            if (bill.getNumber() == number) {
-                bill.ost -= value;
+            if (bill.getId() == number) {
+                bill.balance -= value;
                 return;
             }
         }
@@ -150,8 +145,8 @@ public class NaturalClient implements Client {
     @Override
     public void increaseBill(int number, double value) {
         for (Account bill : bills) {
-            if (bill.getNumber() == number) {
-                bill.ost += value;
+            if (bill.getId() == number) {
+                bill.balance += value;
                 return;
             }
         }
@@ -159,61 +154,42 @@ public class NaturalClient implements Client {
 
     @Override
     public String toString() {
-        StringBuilder answer = new StringBuilder();
-        Class account = Account.class;
-        Method[] methods = account.getDeclaredMethods();
-
-        answer.append(getClass()).append('\n');
-
-        answer.append("private final String Name: ")
-                .append(Name)
-                .append('\n');
-
-        answer.append("private final String Familia: ")
-                .append(Familia)
-                .append('\n');
-
-        answer.append("private final int Seria: ")
-                .append(Seria)
-                .append('\n');
-
-        answer.append("private final int Number: ")
-                .append(Number)
-                .append('\n');
-
-        for (Method i : methods) {
-            answer.append(i)
-                    .append('\n');
-        }
-        return answer.toString();
+        final StringBuilder sb = new StringBuilder("NaturalClient{");
+        sb.append("bills=").append(bills);
+        sb.append(", Name='").append(Name).append('\'');
+        sb.append(", Familia='").append(Familia).append('\'');
+        sb.append(", Seria=").append(Seria);
+        sb.append(", Number=").append(Number);
+        sb.append('}');
+        return sb.toString();
     }
 
     // метод, возвращающий суммарный остаток на всех счетах
-    public double getSummaryOst() {
-        double summaryOst = 0.0;
+    public double getSummaryBalance() {
+        double summaryBalance = 0.0;
         for (Account i : bills) {
-            summaryOst += i.getOst();
+            summaryBalance += i.getBalance();
         }
-        return summaryOst;
+        return summaryBalance;
     }
 
     // метод уменьшения размера остатка счета
     // (принимает ссылку на счет и размер суммы)
-    public void decOst(Account acc, double sum) {
-        acc.ost = doubleToLong(acc.getOst() - sum);
+    public void decBalance(Account acc, double sum) {
+        acc.balance = doubleToLong(acc.getBalance() - sum);
     }
 
     //  метод увеличения размера остатка счета (принимает ссылку на
     // счет и размер суммы)
-    public void incOst(Account acc, double sum) {
-        acc.ost += sum;
+    public void incBalance(Account acc, double sum) {
+        acc.balance += sum;
     }
 
-    private long doubleToLong(double ost) {
-        return (long) (ost * 100);
+    private long doubleToLong(double balance) {
+        return (long) (balance * 100);
     }
 
-    private double longToDouble(double ost) {
-        return (ost / 100.0);
+    private double longToDouble(double balance) {
+        return (balance / 100.0);
     }
 }

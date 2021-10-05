@@ -1,5 +1,6 @@
 package edu.psuti.pp.practice.bank;
 
+import edu.psuti.pp.practice.bank.exceptions.InsufficientFundsException;
 import edu.psuti.pp.practice.bank.main.*;
 
 import java.util.ArrayList;
@@ -63,34 +64,34 @@ public class BankTest {
         System.out.println(creditAccount_01.getPercentSt());
         System.out.println(creditAccount_01.getCreditLimit());
         System.out.println(creditAccount_01.getAssessedPercent());
-        System.out.println(creditAccount_01.getAssessedComission());
-        System.out.println(creditAccount_01.getOst());
-        System.out.println(creditAccount_01.getComiss());
-        System.out.println(creditAccount_01.getNumber());
+        System.out.println(creditAccount_01.getAssessedCommission());
+        System.out.println(creditAccount_01.getBalance());
+        System.out.println(creditAccount_01.getCommission());
+        System.out.println(creditAccount_01.getId());
         System.out.println(creditAccount_01.getValut());
 
         creditAccount_01.setPercentSt(5.5);
         creditAccount_01.setCreditLimit(150_000.0);
         creditAccount_01.setAssessedPercent(312.2);
-        creditAccount_01.setAssessedComission(500.0);
-        creditAccount_01.setComiss(33.2);
-        creditAccount_01.setNumber(AccountNumberGenerator.getNext());
+        creditAccount_01.setAssessedCommission(500.0);
+        creditAccount_01.setCommission(33.2);
+        creditAccount_01.setId(AccountNumberGenerator.getNext());
         creditAccount_01.setValut(Currency.RUB);
 
         System.out.println("Поменяли значения");
         System.out.println(creditAccount_01.getPercentSt());
         System.out.println(creditAccount_01.getCreditLimit());
         System.out.println(creditAccount_01.getAssessedPercent());
-        System.out.println(creditAccount_01.getAssessedComission());
-        System.out.println(creditAccount_01.getOst());
-        System.out.println(creditAccount_01.getComiss());
-        System.out.println(creditAccount_01.getNumber());
+        System.out.println(creditAccount_01.getAssessedCommission());
+        System.out.println(creditAccount_01.getBalance());
+        System.out.println(creditAccount_01.getCommission());
+        System.out.println(creditAccount_01.getId());
         System.out.println(creditAccount_01.getValut());
 
         creditAccount_01.setValut(Currency.JOY);
         System.out.println(">Поменяли валюту");
-        System.out.println(creditAccount_01.getOst());
-        System.out.println(creditAccount_01.getComiss());
+        System.out.println(creditAccount_01.getBalance());
+        System.out.println(creditAccount_01.getCommission());
 
         System.out.println(">>Тест методов");
         System.out.println(">метод начисления процентов");
@@ -108,20 +109,24 @@ public class BankTest {
         );
 
         System.out.println(">Метод comissFromOst");
-        System.out.println(creditAccount_06.getAssessedComission());
-        creditAccount_06.comissFromOst();
-        System.out.println(creditAccount_06.getAssessedComission());
+        System.out.println(creditAccount_06.getAssessedCommission());
+        try {
+            creditAccount_06.commissionFromBalance();
+        } catch (InsufficientFundsException e) {
+            e.getMessage();
+        }
+        System.out.println(creditAccount_06.getAssessedCommission());
 
         System.out.println(">Метод вычитания суммы");
-        System.out.println("Остаток " + creditAccount_06.getOst());
-        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedComission());
+        System.out.println("Остаток " + creditAccount_06.getBalance());
+        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedCommission());
         System.out.println("Начисленные проценты " + creditAccount_06.getAssessedPercent());
 
         //creditAccount_06.popOst(5000.0);
-        creditAccount_06.popOst(150_0.0);
+        creditAccount_06.popBalance(150_0.0);
 
-        System.out.println("Остаток после " + creditAccount_06.getOst());
-        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedComission());
+        System.out.println("Остаток после " + creditAccount_06.getBalance());
+        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedCommission());
         System.out.println("Начисленные проценты " + creditAccount_06.getAssessedPercent());
 
         System.out.println(">Equals");
@@ -210,10 +215,10 @@ public class BankTest {
                 100_000.0
         );
         System.out.println(">Метод вычитания суммы");
-        System.out.println("Остаток " + creditAccount_06.getOst());
-        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedComission());
+        System.out.println("Остаток " + creditAccount_06.getBalance());
+        System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedCommission());
         System.out.println("Начисленные проценты " + creditAccount_06.getAssessedPercent());
-        creditAccount_06.popOst(150_000.0);
+        creditAccount_06.popBalance(150_000.0);
     }
 
     private static void testNaturalClient() {
@@ -260,7 +265,7 @@ public class BankTest {
         System.out.println(">>>Тест методов");
         // метод, возвращающий ссылку на счёт по его уникальному номеру
         System.out.println(">метод, возвращающий ссылку на счёт по его уникальному номеру");
-        System.out.println(c2.clientLink(333).getNumber());
+        System.out.println(c2.clientLink(333).getId());
         // метод, возвращающий массив всех счетов
         System.out.println(">метод, возвращающий массив всех счетов");
         ArrayList<Account> test12312 = c2.getBills();
@@ -268,17 +273,17 @@ public class BankTest {
         System.out.println(">возвращающий список счетов дебетовых карт");
         ArrayList<Account> test21212 = c2.getDebitList();
         for (Account f : test21212) {
-            System.out.println(f.getNumber());
+            System.out.println(f.getId());
         }
         // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
         System.out.println(">метод, возвращающий список счетов кредитных карт");
         ArrayList<Account> test422 = c2.getCreditList();
         for (Account f : test422) {
-            System.out.println(f.getNumber());
+            System.out.println(f.getId());
         }
         // метод, возвращающий суммарный остаток на всех дебетовых счетах
         System.out.println(">метод, возвращающий суммарный остаток на всех дебетовых счетах");
-        System.out.println(c2.getDebitOst());
+        System.out.println(c2.getDebitBalance());
         // метод, возвращающий сумму долга клиента (сумма начисленных процентов
         // и комиссионных по всем кредитным счетам, а также отрицательный остаток по картам)
         // и метод добавления счёта
@@ -296,35 +301,35 @@ public class BankTest {
         // метод, возвращающий список (класс ArrayList<Account>) счетов с
         //   положительным остатком на счете
         System.out.println(">метод, возвращающий список  счетов с положительным остатком на счете");
-        ArrayList<Account> test223 = c2.getPositiveSummaryOst();
+        ArrayList<Account> test223 = c2.getPositiveSummaryBalance();
         for (Account i : test223) {
-            System.out.println(i.getOst());
+            System.out.println(i.getBalance());
         }
         // метод удаления счета по его номеру
         System.out.println(">метод удаления счета по его номеру");
         for (Account i : c2.getBills()) {
-            System.out.print(i.getNumber() + " ");
+            System.out.print(i.getId() + " ");
         }
         System.out.println();
         c2.delBill(213);
         for (Account i : c2.getBills()) {
-            System.out.print(i.getNumber() + " ");
+            System.out.print(i.getId() + " ");
         }
         System.out.println();
         // метод списывания средств со счета (принимает номер счета и размер суммы)
         System.out.println(">метод списывания средств со счета ");
         for (Account i : c2.getBills()) {
-            System.out.print(i.getNumber() + " " + i.getOst());
+            System.out.print(i.getId() + " " + i.getBalance());
         }
         System.out.println();
         c2.decreaseBill(444, 10_000);
         for (Account i : c2.getBills()) {
-            System.out.print(i.getNumber() + " " + i.getOst());
+            System.out.print(i.getId() + " " + i.getBalance());
         }
         System.out.println();
         // метод, возвращающий суммарный остаток на всех счетах
         System.out.println(">метод, возвращающий суммарный остаток на всех счетах");
-        System.out.println(c2.getSummaryOst());
+        System.out.println(c2.getSummaryBalance());
 
         // tostring
         System.out.println(">ToString");
@@ -333,15 +338,15 @@ public class BankTest {
         // метод уменьшения размера остатка счета
         // (принимает ссылку на счет и размер суммы)
         System.out.println(">метод уменьшения размера остатка счета");
-        System.out.println(c2.clientLink(444).getOst());
-        c2.decOst(c2.clientLink(444), 12.2);
-        System.out.println(c2.clientLink(444).getOst());
+        System.out.println(c2.clientLink(444).getBalance());
+        c2.decBalance(c2.clientLink(444), 12.2);
+        System.out.println(c2.clientLink(444).getBalance());
 
         //  метод увеличения размера остатка счета (принимает ссылку на
         // счет и размер суммы)
         System.out.println(">метод увеличения размера остатка счета");
-        System.out.println(c2.clientLink(444).getOst());
-        c2.incOst(c2.clientLink(444), 1322.2);
-        System.out.println(c2.clientLink(444).getOst());
+        System.out.println(c2.clientLink(444).getBalance());
+        c2.incBalance(c2.clientLink(444), 1322.2);
+        System.out.println(c2.clientLink(444).getBalance());
     }
 }
