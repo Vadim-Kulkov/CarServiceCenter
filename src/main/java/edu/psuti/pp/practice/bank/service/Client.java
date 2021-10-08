@@ -3,7 +3,7 @@
  * Kulkov
  */
 
-package edu.psuti.pp.practice.bank.sevice;
+package edu.psuti.pp.practice.bank.service;
 
 import edu.psuti.pp.practice.bank.main.Account;
 

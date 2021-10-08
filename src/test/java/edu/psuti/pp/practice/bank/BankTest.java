@@ -61,8 +61,8 @@ public class BankTest {
         );
         // Тест геттеров-сеттеров
         System.out.println(">>Тест геттеров-сеттеров<<<");
-        System.out.println(creditAccount_01.getPercentSt());
-        System.out.println(creditAccount_01.getCreditLimit());
+        System.out.println(creditAccount_01.getPercentRate());
+        System.out.println(creditAccount_01.getCreditCardLimit());
         System.out.println(creditAccount_01.getAssessedPercent());
         System.out.println(creditAccount_01.getAssessedCommission());
         System.out.println(creditAccount_01.getBalance());
@@ -70,8 +70,8 @@ public class BankTest {
         System.out.println(creditAccount_01.getId());
         System.out.println(creditAccount_01.getValut());
 
-        creditAccount_01.setPercentSt(5.5);
-        creditAccount_01.setCreditLimit(150_000.0);
+        creditAccount_01.setPercentRate(5.5);
+        creditAccount_01.setCreditCardLimit(150_000.0);
         creditAccount_01.setAssessedPercent(312.2);
         creditAccount_01.setAssessedCommission(500.0);
         creditAccount_01.setCommission(33.2);
@@ -79,8 +79,8 @@ public class BankTest {
         creditAccount_01.setValut(Currency.RUB);
 
         System.out.println("Поменяли значения");
-        System.out.println(creditAccount_01.getPercentSt());
-        System.out.println(creditAccount_01.getCreditLimit());
+        System.out.println(creditAccount_01.getPercentRate());
+        System.out.println(creditAccount_01.getCreditCardLimit());
         System.out.println(creditAccount_01.getAssessedPercent());
         System.out.println(creditAccount_01.getAssessedCommission());
         System.out.println(creditAccount_01.getBalance());
@@ -90,8 +90,9 @@ public class BankTest {
 
         creditAccount_01.setValut(Currency.JOY);
         System.out.println(">Поменяли валюту");
-        System.out.println(creditAccount_01.getBalance());
         System.out.println(creditAccount_01.getCommission());
+        System.out.println(creditAccount_01.getBalance());
+        System.out.println(creditAccount_01.getValut());
 
         System.out.println(">>Тест методов");
         System.out.println(">метод начисления процентов");
@@ -123,7 +124,7 @@ public class BankTest {
         System.out.println("Начисленные проценты " + creditAccount_06.getAssessedPercent());
 
         //creditAccount_06.popOst(5000.0);
-        creditAccount_06.popBalance(150_0.0);
+        // creditAccount_06.popBalance(150_0.0);
 
         System.out.println("Остаток после " + creditAccount_06.getBalance());
         System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedCommission());
@@ -218,7 +219,7 @@ public class BankTest {
         System.out.println("Остаток " + creditAccount_06.getBalance());
         System.out.println("Начисленная комиссия " + creditAccount_06.getAssessedCommission());
         System.out.println("Начисленные проценты " + creditAccount_06.getAssessedPercent());
-        creditAccount_06.popBalance(150_000.0);
+        // creditAccount_06.popBalance(150_000.0);
     }
 
     private static void testNaturalClient() {

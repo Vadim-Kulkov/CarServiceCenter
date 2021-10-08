@@ -5,7 +5,7 @@
 
 package edu.psuti.pp.practice.bank.main;
 
-import edu.psuti.pp.practice.bank.sevice.Client;
+import edu.psuti.pp.practice.bank.service.Client;
 
 import java.util.ArrayList;
 
