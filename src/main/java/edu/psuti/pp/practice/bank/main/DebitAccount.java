@@ -12,24 +12,40 @@ package edu.psuti.pp.practice.bank.main;
 */
 public class DebitAccount extends Account {
 
-    public DebitAccount(int number) {
-        this(number, default_balance, default_commission, default_valut);
+    public DebitAccount(int id) {
+        this(
+                id,
+                default_balance,
+                default_commission,
+                default_currentCurrency
+        );
     }
 
-    public DebitAccount(int number, double balance) {
-        this(number, balance, default_commission, default_valut);
+    public DebitAccount(int id, double balance) {
+        this(
+                id,
+                balance,
+                default_commission,
+                default_currentCurrency
+        );
     }
 
-    public DebitAccount(int number, double balance, double commission) {
-        this(number, balance, commission, default_valut);
+    public DebitAccount(int id, double balance, double commission) {
+        this(
+                id,
+                balance,
+                commission,
+                default_currentCurrency
+        );
     }
 
-    public DebitAccount(int number,
+    public DebitAccount(int id,
                         double balance,
                         double commission,
                         Currency valut) {
-        super(number, balance, commission, valut);
+        super(id, balance, commission, valut);
     }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -39,29 +55,30 @@ public class DebitAccount extends Account {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-
-        DebitAccount debAcc = (DebitAccount) obj;
-        if (debAcc.getBalance() != getBalance()) {
-            return false;
-        }
-        if (debAcc.getCommission() != getCommission()) {
-            return false;
-        }
-        if (debAcc.getId() != getId()) {
-            return false;
-        }
-        return debAcc.getValut() == getValut();
+        DebitAccount that = (DebitAccount) obj;
+        return Double.compare(that.getBalance(), getBalance()) == 0 &&
+                Double.compare(that.getCommission(), getCommission()) == 0 &&
+                that.getId() == getId() &&
+                that.getCurrentCurrency() == getCurrentCurrency();
     }
 
     @Override
     public int hashCode() {
-        int number = 1_111_111_111;
-        number ^= Double.hashCode(getBalance());
-        number ^= getId();
-        number ^= Double.hashCode(getCommission());
-        number ^= (getValut() == null) ? 0 : getValut().hashCode();
-        return number;
+        return 111_111 ^
+                Double.hashCode(getBalance()) ^
+                Double.hashCode(getCommission()) ^
+                getCurrentCurrency().hashCode() ^
+                getId();
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("DebitAccount{");
+        sb.append("id=").append(getId());
+        sb.append(", balance=").append(getBalance());
+        sb.append(", currentCurrency=").append(getCurrentCurrency());
+        sb.append(", Commission=").append(getCommission());
+        sb.append('}');
+        return sb.toString();
+    }
 }

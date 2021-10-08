@@ -11,7 +11,7 @@ import edu.psuti.pp.practice.bank.service.Recount;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreditAccount<default_interestRate> extends Account {
+public class CreditAccount extends Account {
 
     // процентная ставка
     private double percentRate;
@@ -22,19 +22,19 @@ public class CreditAccount<default_interestRate> extends Account {
     // начисленные комиссионные
     private double assessedCommission;
 
-    private static final double default_percentRate = 0;
-    private static final double default_creditCardLimit = 0;
+    private static final double default_percentRate = 10.0;
+    private static final double default_creditCardLimit = 100_000;
 
     public CreditAccount(int id) {
-        this(id, default_balance, default_commission, default_valut, default_percentRate, default_creditCardLimit);
+        this(id, default_balance, default_commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
     }
 
     public CreditAccount(int id, double balance) {
-        this(id, balance, default_commission, default_valut, default_percentRate, default_creditCardLimit);
+        this(id, balance, default_commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
     }
 
     public CreditAccount(int id, double balance, double commission) {
-        this(id, balance, commission, default_valut, default_percentRate, default_creditCardLimit);
+        this(id, balance, commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
     }
 
     public CreditAccount(int id,
@@ -100,6 +100,7 @@ public class CreditAccount<default_interestRate> extends Account {
         }
     }
 
+    // метод, вычитающий комиссию из остатка
     @Override
     public void commissionFromBalance() throws InsufficientFundsException {
         if (getCommission() > getBalance()) {
@@ -108,35 +109,18 @@ public class CreditAccount<default_interestRate> extends Account {
         balance -= getCommission();
     }
 
+    // метод пополнения счета
     @Override
-    public void popBalance(double value) throws InsufficientFundsException {
-
-        if (value > creditCardLimit | value > balance) {
+    public void addToBalance(double value) throws InsufficientFundsException {
+        if (value > creditCardLimit) {
             throw new InsufficientFundsException();
         }
-        if (value == 0) {
-            return;
+        value = residueFromRepayAssessedCommission(value);
+        if (value > 0) {
+            value = residueFromRepayAssessedPercent(value);
         }
-        if (assessedCommission > 0) {
-            if (assessedCommission >= value) {
-                assessedCommission -= value;
-                return;
-            } else {
-                value -= assessedCommission;
-                assessedCommission = 0;
-            }
-        }
-        if (value != 0 && assessedPercent > 0) {
-            if (assessedPercent >= value) {
-                assessedPercent -= value;
-                return;
-            } else {
-                value -= assessedPercent;
-                assessedPercent = 0;
-            }
-        }
-        if (value != 0) {
-            balance -= Recount.doubleToLong(value);
+        if (value > 0) {
+            balance += Recount.doubleToLong(value);
         }
     }
 
@@ -146,63 +130,81 @@ public class CreditAccount<default_interestRate> extends Account {
         return cal.getActualMaximum(Calendar.DAY_OF_YEAR);
     }
 
+    private double residueFromRepayAssessedCommission(double value) {
+        if (assessedCommission == value) {
+            assessedCommission = 0;
+            return 0.0;
+        } else if (assessedCommission > value) {
+            assessedCommission -= value;
+            return 0.0;
+        } else {
+            value -= assessedCommission;
+            assessedCommission = 0;
+            return value;
+        }
+    }
+
+    private double residueFromRepayAssessedPercent(double value) {
+        if (assessedPercent == value) {
+            assessedPercent = 0;
+            return 0.0;
+        } else if (assessedPercent > value) {
+            assessedPercent -= value;
+            return 0.0;
+        } else {
+            value -= assessedPercent;
+            assessedPercent = 0;
+            return value;
+        }
+    }
+
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
+        CreditAccount that = (CreditAccount) o;
+        return Double.compare(that.percentRate, percentRate) == 0 &&
+                Double.compare(that.creditCardLimit, creditCardLimit) == 0 &&
+                Double.compare(that.assessedPercent, assessedPercent) == 0 &&
+                Double.compare(that.assessedCommission, assessedCommission) == 0 &&
+                that.getCurrentCurrency() == getCurrentCurrency() &&
+                that.getId() == getId() &&
+                that.getCommission() == getCommission() &&
+                that.getBalance() == getBalance();
 
-        CreditAccount debAcc = (CreditAccount) obj;
-        if (debAcc.getBalance() != getBalance()) {
-            return false;
-        }
-        if (debAcc.getCommission() != getCommission()) {
-            return false;
-        }
-        if (debAcc.getId() != getId()) {
-            return false;
-        }
-        if (debAcc.getValut() != getValut()) {
-            return false;
-        }
-
-        if (debAcc.getPercentRate() != getPercentRate()) {
-            return false;
-        }
-        if (debAcc.getCreditCardLimit() != getCreditCardLimit()) {
-            return false;
-        }
-        if (debAcc.getAssessedPercent() != getAssessedPercent()) {
-            return false;
-        }
-        return debAcc.getAssessedCommission() == getAssessedCommission();
     }
 
     @Override
     public int hashCode() {
-        int number = 1_111_111_111;
-        number ^= Double.hashCode(getBalance());
-        number ^= getId();
-        number ^= Double.hashCode(getCommission());
-        number ^= (getValut() == null) ? 0 : getValut().hashCode();
+        return 111_111 ^
+                Double.hashCode(getBalance()) ^
+                Double.hashCode(getPercentRate()) ^
+                Double.hashCode(getCreditCardLimit()) ^
+                Double.hashCode(getAssessedCommission()) ^
+                Double.hashCode(getAssessedPercent()) ^
+                Double.hashCode(getCommission()) ^
+                getCurrentCurrency().hashCode() ^
+                getId();
 
-        number ^= Double.hashCode(getPercentRate());
-        number ^= Double.hashCode(getCreditCardLimit());
-        number ^= Double.hashCode(getAssessedPercent());
-        number ^= Double.hashCode(getAssessedCommission());
-        return number;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CreditAccount{");
-        sb.append("percentRate=").append(percentRate);
+        sb.append("id=").append(getId());
+        sb.append(", balance=").append(getBalance());
+        sb.append(", currentCurrency=").append(getCurrentCurrency());
+        sb.append(", Commission=").append(getCommission());
+        sb.append(", percentRate=").append(percentRate);
         sb.append(", creditСardLimit=").append(creditCardLimit);
         sb.append(", assessedPercent=").append(assessedPercent);
         sb.append(", assessedCommission=").append(assessedCommission);
+
         sb.append('}');
         return sb.toString();
     }

@@ -7,21 +7,21 @@ package edu.psuti.pp.practice.bank.service;
 
 import edu.psuti.pp.practice.bank.main.Account;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Client {
 
     // метод, возвращающий ссылку на счёт по его уникальному номеру
-    Account clientLink(int Number);
+    Account getLinkToAccount(int Number);
 
     // возвращающий список (класс ArrayList<Account>) всех счетов
-    ArrayList<Account> getBills();
+    List<Account> getAccountList();
 
     // возвращающий список (класс ArrayList<Account>) счетов дебетовых карт
-    ArrayList<Account> getDebitList();
+    List<Account> getDebitList();
 
     // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
-    ArrayList<Account> getCreditList();
+    List<Account> getCreditList();
 
     // метод, возвращающий суммарный остаток на всех дебетовых счетах
     double getDebitBalance();
@@ -32,17 +32,17 @@ public interface Client {
 
     // метод, возвращающий список (класс ArrayList<Account>) счетов с
     // положительным остатком на счете
-    ArrayList<Account> getPositiveSummaryBalance();
+    List<Account> getPositiveSummaryBalance();
 
     // метод удаления счета по его номеру
-    void delBill(int number);
+    void deleteAccount(int number);
 
     // метод добавления счета (принимает в качестве входного параметра ссылку на счет)
-    void addBill(Account acc);
+    void addAccount(Account acc);
 
     // метод списывания средств со счета (принимает номер счета и размер суммы)
-    void decreaseBill(int number, double value);
+    void decreaseAccount(int number, double value);
 
     // метод пополнения счета (принимает номер счета и размер суммы)
-    void increaseBill(int number, double value);
+    void increaseAccount(int number, double value);
 }

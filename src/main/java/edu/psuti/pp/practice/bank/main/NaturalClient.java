@@ -6,51 +6,54 @@
 package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.service.Client;
+import edu.psuti.pp.practice.bank.service.Recount;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NaturalClient implements Client {
 
-    private final ArrayList<Account> bills; // Массив счетов
-    private final static ArrayList<Account> default_accounts = new ArrayList<>();
+    private final List<Account> accountList;
+    private final static List<Account> default_accounts = new ArrayList<>();
     private final String Name;
-    private final String Familia;
+    private final String Surname;
     private final int Seria;  // Серия паспорт
-    private final int Number; // номер паспорта
+    private final int PassportNumber;
 
-    public NaturalClient(String Name, String Familia, int Seria, int Number) {
-        this(Name, Familia, Seria, Number, default_accounts);
+    public NaturalClient(String Name, String surname, int Seria, int passportNumber) {
+        this(Name, surname, Seria, passportNumber, default_accounts);
     }
 
-    public NaturalClient(String Name, String Familia, int Seria, int Number, ArrayList<Account> bills) {
+    public NaturalClient(String Name, String surname, int Seria, int passportNumber, List<Account> accountList) {
         this.Name = Name;
-        this.Familia = Familia;
+        this.Surname = surname;
         this.Seria = Seria;
-        this.Number = Number;
-        this.bills = new ArrayList<>(bills);
+        this.PassportNumber = passportNumber;
+        this.accountList = new ArrayList<>(accountList);
     }
 
     // метод, возвращающий ссылку на счёт по его уникальному номеру
     @Override
-    public Account clientLink(int Number) throws NullPointerException {
-        for (Account bill : bills) {
-            if (bill.getId() == Number)
-                return bill;
+    public Account getLinkToAccount(int id) throws NullPointerException {
+        for (Account account : accountList) {
+            if (account.getId() == id) {
+                return account;
+            }
         }
         return null;
     }
 
     // метод, возвращающий массив всех счетов
     @Override
-    public ArrayList<Account> getBills() {
-        return new ArrayList<>(bills);         // Возвращаем копию, чтобы не было проблем
+    public List<Account> getAccountList() {
+        return new ArrayList<>(accountList);
     }
 
     // возвращающий список (класс ArrayList<Account>) счетов дебетовых карт
     @Override
-    public ArrayList<Account> getDebitList() {
-        ArrayList<Account> result = new ArrayList<>();
-        for (Account i : bills) {
+    public List<Account> getDebitList() {
+        List<Account> result = new ArrayList<>();
+        for (Account i : accountList) {
             if (i instanceof DebitAccount) {
                 result.add(i);
             }
@@ -60,9 +63,9 @@ public class NaturalClient implements Client {
 
     // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
     @Override
-    public ArrayList<Account> getCreditList() {
-        ArrayList<Account> result = new ArrayList<>();
-        for (Account i : bills) {
+    public List<Account> getCreditList() {
+        List<Account> result = new ArrayList<>();
+        for (Account i : accountList) {
             if (i instanceof CreditAccount) {
                 result.add(i);
             }
@@ -74,7 +77,7 @@ public class NaturalClient implements Client {
     @Override
     public double getDebitBalance() {
         double result = 0.0;
-        for (Account i : bills) {
+        for (Account i : accountList) {
             if (i instanceof DebitAccount) {
                 result += i.getBalance();
             }
@@ -87,13 +90,13 @@ public class NaturalClient implements Client {
     @Override
     public double getDuty() {
         double result = 0.0;
-        for (Account i : bills) {
-            if (i instanceof CreditAccount) {
-                result += ((CreditAccount) i).getAssessedPercent() +
-                        (((CreditAccount) i).getAssessedCommission());
+        for (Account account : accountList) {
+            if (account instanceof CreditAccount) {
+                result += ((CreditAccount) account).getAssessedPercent() +
+                        (((CreditAccount) account).getAssessedCommission());
             }
-            if (i.getBalance() < 0.1) {
-                result += i.getBalance();
+            if (account.getBalance() < 0.1) {
+                result += account.getBalance();
             }
         }
         return result;
@@ -102,11 +105,11 @@ public class NaturalClient implements Client {
     // метод, возвращающий список (класс ArrayList<Account>) счетов с
     //   положительным остатком на счете
     @Override
-    public ArrayList<Account> getPositiveSummaryBalance() {
-        ArrayList<Account> summaryPositiveBalance = new ArrayList<>();
-        for (Account i : bills) {
-            if (i.getBalance() > 0.0) {
-                summaryPositiveBalance.add(i);
+    public List<Account> getPositiveSummaryBalance() {
+        List<Account> summaryPositiveBalance = new ArrayList<>();
+        for (Account account : accountList) {
+            if (account.getBalance() > 0.0) {
+                summaryPositiveBalance.add(account);
             }
         }
         return summaryPositiveBalance;
@@ -114,10 +117,10 @@ public class NaturalClient implements Client {
 
     // метод удаления счета по его номеру
     @Override
-    public void delBill(int number) {
-        for (int i = 0; i < bills.size(); i++) {
-            if (bills.get(i).getId() == number) {
-                bills.remove(i);
+    public void deleteAccount(int id) {
+        for (int i = 0; i < accountList.size(); i++) {
+            if (accountList.get(i).getId() == id) {
+                accountList.remove(i);
                 break;
             }
         }
@@ -126,16 +129,16 @@ public class NaturalClient implements Client {
     // метод добавления счета (принимает в качестве
     // входного параметра ссылку на счет)
     @Override
-    public void addBill(Account acc) {
-        bills.add(acc);
+    public void addAccount(Account account) {
+        accountList.add(account);
     }
 
     // метод списывания средств со счета (принимает номер счета и размер суммы)
     @Override
-    public void decreaseBill(int number, double value) {
-        for (Account bill : bills) {
-            if (bill.getId() == number) {
-                bill.balance -= value;
+    public void decreaseAccount(int id, double value) {
+        for (Account account : accountList) {
+            if (account.getId() == id) {
+                account.balance -= value;
                 return;
             }
         }
@@ -143,53 +146,45 @@ public class NaturalClient implements Client {
 
     // метод пополнения счета (принимает номер счета и размер суммы)
     @Override
-    public void increaseBill(int number, double value) {
-        for (Account bill : bills) {
-            if (bill.getId() == number) {
-                bill.balance += value;
+    public void increaseAccount(int id, double value) {
+        for (Account account : accountList) {
+            if (account.getId() == id) {
+                account.balance += value;
                 return;
             }
         }
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("NaturalClient{");
-        sb.append("bills=").append(bills);
-        sb.append(", Name='").append(Name).append('\'');
-        sb.append(", Familia='").append(Familia).append('\'');
-        sb.append(", Seria=").append(Seria);
-        sb.append(", Number=").append(Number);
-        sb.append('}');
-        return sb.toString();
-    }
-
     // метод, возвращающий суммарный остаток на всех счетах
     public double getSummaryBalance() {
         double summaryBalance = 0.0;
-        for (Account i : bills) {
-            summaryBalance += i.getBalance();
+        for (Account account : accountList) {
+            summaryBalance += account.getBalance();
         }
         return summaryBalance;
     }
 
     // метод уменьшения размера остатка счета
     // (принимает ссылку на счет и размер суммы)
-    public void decBalance(Account acc, double sum) {
-        acc.balance = doubleToLong(acc.getBalance() - sum);
+    public void decBalance(Account account, double sum) {
+        account.balance = Recount.doubleToLong(account.getBalance() - sum);
     }
 
     //  метод увеличения размера остатка счета (принимает ссылку на
     // счет и размер суммы)
-    public void incBalance(Account acc, double sum) {
-        acc.balance += sum;
+    public void incBalance(Account account, double sum) {
+        account.balance += sum;
     }
 
-    private long doubleToLong(double balance) {
-        return (long) (balance * 100);
-    }
-
-    private double longToDouble(double balance) {
-        return (balance / 100.0);
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("NaturalClient{");
+        sb.append("accountList=").append(accountList);
+        sb.append(", Name='").append(Name).append('\'');
+        sb.append(", Surname='").append(Surname).append('\'');
+        sb.append(", Seria=").append(Seria);
+        sb.append(", PassportNumber=").append(PassportNumber);
+        sb.append('}');
+        return sb.toString();
     }
 }

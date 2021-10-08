@@ -12,44 +12,44 @@ public abstract class Account {
 
     protected final static long default_balance = 0;
     protected final static long default_commission = 0;
-    protected final static Currency default_valut = Currency.USD;
+    protected final static Currency default_currentCurrency = Currency.USD;
 
     protected long balance;
     private int id;
 
     private long commission;
-    protected Currency valut;
+    protected Currency currentCurrency;
 
     public Account(int id) {
         this(id,
                 default_balance,
                 default_commission,
-                default_valut);
+                default_currentCurrency);
     }
 
     public Account(int id, double balance) {
         this(id,
                 balance,
                 default_commission,
-                default_valut);
+                default_currentCurrency);
     }
 
     public Account(int id, double balance, double commission) {
         this(id,
                 balance,
                 commission,
-                default_valut);
+                default_currentCurrency);
     }
 
     public Account(int id,
                    double balance,
                    double commission,
-                   Currency valut) {
+                   Currency currentCurrency) {
 
         this.id = id;
         this.balance = Recount.doubleToLong(balance);
         this.commission = Recount.doubleToLong(commission);
-        this.valut = valut;
+        this.currentCurrency = currentCurrency;
     }
 
     public int getId() {
@@ -72,13 +72,13 @@ public abstract class Account {
         this.commission = Recount.doubleToLong(commission);
     }
 
-    public Currency getValut() {
-        return valut;
+    public Currency getCurrentCurrency() {
+        return currentCurrency;
     }
 
-    public void setValut(Currency NewCurrency) {
+    public void setCurrentCurrency(Currency NewCurrency) {
         changeCurrency(NewCurrency);
-        valut = NewCurrency;
+        currentCurrency = NewCurrency;
     }
 
     // метод, вычитающий комиссию из остатка
@@ -98,7 +98,7 @@ public abstract class Account {
     }
 
     // метод списывания суммы со счёта
-    public void popBalance(double value) throws InsufficientFundsException {
+    public void deductFromTheBalance(double value) throws InsufficientFundsException {
         if (value > balance) {
             throw new InsufficientFundsException();
         }
@@ -111,7 +111,7 @@ public abstract class Account {
         sb.append("balance=").append(balance);
         sb.append(", id=").append(id);
         sb.append(", сommission=").append(commission);
-        sb.append(", valut=").append(valut);
+        sb.append(", currentСurrency=").append(currentCurrency);
         sb.append('}');
         return sb.toString();
     }
@@ -120,12 +120,12 @@ public abstract class Account {
         commission = Recount.doubleToLong(
                 Recount.recountValue(
                         Recount.longToDouble(commission),
-                        valut,
+                        currentCurrency,
                         newCurrency));
         balance = Recount.doubleToLong(
                 Recount.recountValue(
                         Recount.longToDouble(balance),
-                        valut,
+                        currentCurrency,
                         newCurrency));
     }
 }
