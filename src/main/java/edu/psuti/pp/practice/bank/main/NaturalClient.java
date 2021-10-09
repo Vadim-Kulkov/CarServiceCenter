@@ -52,26 +52,25 @@ public class NaturalClient implements Client {
     // возвращающий список (класс ArrayList<Account>) счетов дебетовых карт
     @Override
     public List<Account> getDebitList() {
+        return getListOfType(DebitAccount.class);
+    }
+
+    // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
+    @Override
+    public List<Account> getCreditList() {
+        return getListOfType(CreditAccount.class);
+    }
+
+    private List<Account> getListOfType(Class<?> clazz) {
         List<Account> result = new ArrayList<>();
         for (Account i : accountList) {
-            if (i instanceof DebitAccount) {
+            if (clazz.isAssignableFrom(i.getClass())) {
                 result.add(i);
             }
         }
         return result;
     }
 
-    // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
-    @Override
-    public List<Account> getCreditList() {
-        List<Account> result = new ArrayList<>();
-        for (Account i : accountList) {
-            if (i instanceof CreditAccount) {
-                result.add(i);
-            }
-        }
-        return result;
-    }
 
     // метод, возвращающий суммарный остаток на всех дебетовых счетах
     @Override
@@ -118,12 +117,8 @@ public class NaturalClient implements Client {
     // метод удаления счета по его номеру
     @Override
     public void deleteAccount(int id) {
-        for (int i = 0; i < accountList.size(); i++) {
-            if (accountList.get(i).getId() == id) {
-                accountList.remove(i);
-                break;
-            }
-        }
+        accountList.removeIf(i -> i.getId() == id);
+
     }
 
     // метод добавления счета (принимает в качестве

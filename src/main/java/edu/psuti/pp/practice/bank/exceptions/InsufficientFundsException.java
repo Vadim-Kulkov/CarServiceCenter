@@ -12,11 +12,4 @@ public class InsufficientFundsException extends Exception {
         return "Ошибка: попытка списать со счёта сумму," +
                 " превышающую остаток или лимит по кредитной карте";
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("InsufficientFundsException{");
-        sb.append('}');
-        return sb.toString();
-    }
 }

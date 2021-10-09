@@ -22,35 +22,35 @@ public class CreditAccount extends Account {
     // начисленные комиссионные
     private double assessedCommission;
 
-    private static final double default_percentRate = 10.0;
-    private static final double default_creditCardLimit = 100_000;
+    private static final double DEFAULT_PERCENT_RATE = 10.0;
+    private static final double DEFAULT_CREDIT_CARD_LIMIT = 100_000;
 
     public CreditAccount(int id) {
-        this(id, default_balance, default_commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
+        this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id, double balance) {
-        this(id, balance, default_commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
+        this(id, balance, DEFAULT_COMMISSION, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id, double balance, double commission) {
-        this(id, balance, commission, default_currentCurrency, default_percentRate, default_creditCardLimit);
+        this(id, balance, commission, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id,
                          double balance,
                          double commission,
-                         Currency valut) {
-        this(id, balance, commission, valut, default_percentRate, default_creditCardLimit);
+                         Currency currentCurrency) {
+        this(id, balance, commission, currentCurrency, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id,
                          double balance,
                          double commission,
-                         Currency valut,
+                         Currency currentCurrency,
                          double percentRate,
                          double creditCardLimit) {
-        super(id, balance, commission, valut);
+        super(id, balance, commission, currentCurrency);
         this.percentRate = percentRate;
         this.creditCardLimit = creditCardLimit;
     }
@@ -156,6 +156,7 @@ public class CreditAccount extends Account {
             assessedPercent = 0;
             return value;
         }
+
     }
 
 

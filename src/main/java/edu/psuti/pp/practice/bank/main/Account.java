@@ -10,9 +10,9 @@ import edu.psuti.pp.practice.bank.service.Recount;
 
 public abstract class Account {
 
-    protected final static long default_balance = 0;
-    protected final static long default_commission = 0;
-    protected final static Currency default_currentCurrency = Currency.USD;
+    protected final static long DEFAULT_BALANCE = 0;
+    protected final static long DEFAULT_COMMISSION = 0;
+    protected final static Currency DEFAULT_CURRENT_CURRENCY = Currency.USD;
 
     protected long balance;
     private int id;
@@ -22,23 +22,23 @@ public abstract class Account {
 
     public Account(int id) {
         this(id,
-                default_balance,
-                default_commission,
-                default_currentCurrency);
+                DEFAULT_BALANCE,
+                DEFAULT_COMMISSION,
+                DEFAULT_CURRENT_CURRENCY);
     }
 
     public Account(int id, double balance) {
         this(id,
                 balance,
-                default_commission,
-                default_currentCurrency);
+                DEFAULT_COMMISSION,
+                DEFAULT_CURRENT_CURRENCY);
     }
 
     public Account(int id, double balance, double commission) {
         this(id,
                 balance,
                 commission,
-                default_currentCurrency);
+                DEFAULT_CURRENT_CURRENCY);
     }
 
     public Account(int id,
@@ -121,11 +121,15 @@ public abstract class Account {
                 Recount.recountValue(
                         Recount.longToDouble(commission),
                         currentCurrency,
-                        newCurrency));
+                        newCurrency
+                )
+        );
         balance = Recount.doubleToLong(
                 Recount.recountValue(
                         Recount.longToDouble(balance),
                         currentCurrency,
-                        newCurrency));
+                        newCurrency
+                )
+        );
     }
 }

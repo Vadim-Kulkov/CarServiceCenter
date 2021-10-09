@@ -15,9 +15,9 @@ public class DebitAccount extends Account {
     public DebitAccount(int id) {
         this(
                 id,
-                default_balance,
-                default_commission,
-                default_currentCurrency
+                DEFAULT_BALANCE,
+                DEFAULT_COMMISSION,
+                DEFAULT_CURRENT_CURRENCY
         );
     }
 
@@ -25,8 +25,8 @@ public class DebitAccount extends Account {
         this(
                 id,
                 balance,
-                default_commission,
-                default_currentCurrency
+                DEFAULT_COMMISSION,
+                DEFAULT_CURRENT_CURRENCY
         );
     }
 
@@ -35,7 +35,7 @@ public class DebitAccount extends Account {
                 id,
                 balance,
                 commission,
-                default_currentCurrency
+                DEFAULT_CURRENT_CURRENCY
         );
     }
 
@@ -74,7 +74,8 @@ public class DebitAccount extends Account {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DebitAccount{");
-        sb.append("id=").append(getId());
+        sb.append("id=")
+                .append(getId());
         sb.append(", balance=").append(getBalance());
         sb.append(", currentCurrency=").append(getCurrentCurrency());
         sb.append(", Commission=").append(getCommission());
