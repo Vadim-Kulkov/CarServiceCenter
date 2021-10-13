@@ -6,42 +6,42 @@
 package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.exceptions.InsufficientFundsException;
-import edu.psuti.pp.practice.bank.service.Recount;
+import edu.psuti.pp.practice.bank.service.Converter;
 
 import java.util.Calendar;
 import java.util.Date;
 
 public class CreditAccount extends Account {
 
-    // процентная ставка
-    private double percentRate;
-    // лимит по кредитной карте
-    private double creditCardLimit;
-    // начисленные проценты
-    private double assessedPercent;
-    // начисленные комиссионные
-    private double assessedCommission;
-
     private static final double DEFAULT_PERCENT_RATE = 10.0;
     private static final double DEFAULT_CREDIT_CARD_LIMIT = 100_000;
 
+
+    private double percentRate;
+
+    private double creditCardLimit;
+
+    private double assessedPercent;
+
+    private double assessedCommission;
+
     public CreditAccount(int id) {
-        this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
+        this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id, double balance) {
-        this(id, balance, DEFAULT_COMMISSION, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
+        this(id, balance, DEFAULT_COMMISSION, DEFAULT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id, double balance, double commission) {
-        this(id, balance, commission, DEFAULT_CURRENT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
+        this(id, balance, commission, DEFAULT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id,
                          double balance,
                          double commission,
-                         Currency currentCurrency) {
-        this(id, balance, commission, currentCurrency, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
+                         Currency currency) {
+        this(id, balance, commission, currency, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
     public CreditAccount(int id,
@@ -55,7 +55,6 @@ public class CreditAccount extends Account {
         this.creditCardLimit = creditCardLimit;
     }
 
-    // процентная ставка
     public double getPercentRate() {
         return percentRate;
     }
@@ -64,7 +63,6 @@ public class CreditAccount extends Account {
         this.percentRate = percentRate;
     }
 
-    // лимит по кредитной карте
     public double getCreditCardLimit() {
         return creditCardLimit;
     }
@@ -73,7 +71,6 @@ public class CreditAccount extends Account {
         this.creditCardLimit = creditCardLimit;
     }
 
-    // начисленные проценты
     public double getAssessedPercent() {
         return assessedPercent;
     }
@@ -82,7 +79,6 @@ public class CreditAccount extends Account {
         this.assessedPercent = assessedPercent;
     }
 
-    // начисленные комиссионные
     public double getAssessedCommission() {
         return assessedCommission;
     }
@@ -91,46 +87,43 @@ public class CreditAccount extends Account {
         this.assessedCommission = assessedComission;
     }
 
-    // метод начисления процентов
-    public void accrualPercent() {
+    public void accruePercent() {
         if (getBalance() < getCreditCardLimit()) {
-            assessedPercent += (creditCardLimit - getBalance()) * (percentRate / actualDaysOfYear() / 100.0);
+            assessedPercent += (creditCardLimit - getBalance()) * (percentRate / getActualDaysOfYear() / 100);
         } else {
             assessedPercent += (getBalance() * percentRate) / 100;
         }
     }
 
-    // метод, вычитающий комиссию из остатка
     @Override
-    public void commissionFromBalance() throws InsufficientFundsException {
+    public void debitCommissionFromBalance() throws InsufficientFundsException {
         if (getCommission() > getBalance()) {
             throw new InsufficientFundsException();
         }
         balance -= getCommission();
     }
 
-    // метод пополнения счета
     @Override
     public void addToBalance(double value) throws InsufficientFundsException {
         if (value > creditCardLimit) {
             throw new InsufficientFundsException();
         }
-        value = residueFromRepayAssessedCommission(value);
+        value = repayAssessedCommissionByValue(value);
         if (value > 0) {
-            value = residueFromRepayAssessedPercent(value);
+            value = repayAssessedPercentByValue(value);
         }
         if (value > 0) {
-            balance += Recount.doubleToLong(value);
+            balance += Converter.doubleToLong(value);
         }
     }
 
-    private int actualDaysOfYear() {
+    private int getActualDaysOfYear() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         return cal.getActualMaximum(Calendar.DAY_OF_YEAR);
     }
 
-    private double residueFromRepayAssessedCommission(double value) {
+    private double repayAssessedCommissionByValue(double value) {
         if (assessedCommission == value) {
             assessedCommission = 0;
             return 0.0;
@@ -144,7 +137,7 @@ public class CreditAccount extends Account {
         }
     }
 
-    private double residueFromRepayAssessedPercent(double value) {
+    private double repayAssessedPercentByValue(double value) {
         if (assessedPercent == value) {
             assessedPercent = 0;
             return 0.0;
@@ -173,7 +166,7 @@ public class CreditAccount extends Account {
                 Double.compare(that.creditCardLimit, creditCardLimit) == 0 &&
                 Double.compare(that.assessedPercent, assessedPercent) == 0 &&
                 Double.compare(that.assessedCommission, assessedCommission) == 0 &&
-                that.getCurrentCurrency() == getCurrentCurrency() &&
+                that.getCurrency() == getCurrency() &&
                 that.getId() == getId() &&
                 that.getCommission() == getCommission() &&
                 that.getBalance() == getBalance();
@@ -189,7 +182,7 @@ public class CreditAccount extends Account {
                 Double.hashCode(getAssessedCommission()) ^
                 Double.hashCode(getAssessedPercent()) ^
                 Double.hashCode(getCommission()) ^
-                getCurrentCurrency().hashCode() ^
+                getCurrency().hashCode() ^
                 getId();
 
     }
@@ -197,15 +190,10 @@ public class CreditAccount extends Account {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CreditAccount{");
-        sb.append("id=").append(getId());
-        sb.append(", balance=").append(getBalance());
-        sb.append(", currentCurrency=").append(getCurrentCurrency());
-        sb.append(", Commission=").append(getCommission());
-        sb.append(", percentRate=").append(percentRate);
-        sb.append(", creditСardLimit=").append(creditCardLimit);
+        sb.append("percentRate=").append(percentRate);
+        sb.append(", creditCardLimit=").append(creditCardLimit);
         sb.append(", assessedPercent=").append(assessedPercent);
         sb.append(", assessedCommission=").append(assessedCommission);
-
         sb.append('}');
         return sb.toString();
     }

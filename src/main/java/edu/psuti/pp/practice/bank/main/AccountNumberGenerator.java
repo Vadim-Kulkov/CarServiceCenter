@@ -5,21 +5,20 @@
 
 package edu.psuti.pp.practice.bank.main;
 
-// Этот класс нужно использовать для генерации номеров счетов
 public class AccountNumberGenerator {
 
-    private static int num = 0;
+    private static int value = 0;
 
     public static int getNext() {
-        return ++num;
+        return ++value;
     }
 
     public static int getCurrent() {
-        return num;
+        return value;
     }
 
     private void reset() {
-        num = 0;
+        value = 0;
     }
 
     @Override

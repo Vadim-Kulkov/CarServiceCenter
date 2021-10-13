@@ -7,14 +7,14 @@ package edu.psuti.pp.practice.bank.service;
 
 import edu.psuti.pp.practice.bank.main.Currency;
 
-public class Recount {
+public class Converter {
 
     public static long doubleToLong(double value) {
         return (long) (value * 100);
     }
 
     public static double longToDouble(double value) {
-        return (value / 100.0);
+        return (value / 100);
     }
 
     private static int findFirstPosition(Currency value) {
@@ -40,12 +40,12 @@ public class Recount {
         int firstPosition = findFirstPosition(old),
                 secondPosition = findFirstPosition(newCurrency);
 
-        return value * Currency.currencyRatios[firstPosition][secondPosition];
+        return value * Currency.CURRENCY_RATIOS[firstPosition][secondPosition];
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Recount{");
+        final StringBuilder sb = new StringBuilder("Converter{");
         sb.append('}');
         return sb.toString();
     }

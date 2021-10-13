@@ -6,39 +6,43 @@
 package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.exceptions.InsufficientFundsException;
-import edu.psuti.pp.practice.bank.service.Recount;
+import edu.psuti.pp.practice.bank.service.Converter;
 
 public abstract class Account {
 
-    protected final static long DEFAULT_BALANCE = 0;
-    protected final static long DEFAULT_COMMISSION = 0;
-    protected final static Currency DEFAULT_CURRENT_CURRENCY = Currency.USD;
+    protected static final long DEFAULT_BALANCE = 0;
+    protected static final long DEFAULT_COMMISSION = 0;
+    protected static final Currency DEFAULT_CURRENCY = Currency.USD;
+    private static final int ZERO = 0;
 
     protected long balance;
     private int id;
 
     private long commission;
-    protected Currency currentCurrency;
+    protected Currency currency;
 
     public Account(int id) {
         this(id,
                 DEFAULT_BALANCE,
                 DEFAULT_COMMISSION,
-                DEFAULT_CURRENT_CURRENCY);
+                DEFAULT_CURRENCY
+        );
     }
 
     public Account(int id, double balance) {
         this(id,
                 balance,
                 DEFAULT_COMMISSION,
-                DEFAULT_CURRENT_CURRENCY);
+                DEFAULT_CURRENCY
+        );
     }
 
     public Account(int id, double balance, double commission) {
         this(id,
                 balance,
                 commission,
-                DEFAULT_CURRENT_CURRENCY);
+                DEFAULT_CURRENCY
+        );
     }
 
     public Account(int id,
@@ -47,9 +51,9 @@ public abstract class Account {
                    Currency currentCurrency) {
 
         this.id = id;
-        this.balance = Recount.doubleToLong(balance);
-        this.commission = Recount.doubleToLong(commission);
-        this.currentCurrency = currentCurrency;
+        this.balance = Converter.doubleToLong(balance);
+        this.commission = Converter.doubleToLong(commission);
+        this.currency = currentCurrency;
     }
 
     public int getId() {
@@ -61,48 +65,63 @@ public abstract class Account {
     }
 
     public double getBalance() {
-        return Recount.longToDouble(balance);
+        return Converter.longToDouble(balance);
     }
 
     public double getCommission() {
-        return Recount.longToDouble(commission);
+        return Converter.longToDouble(commission);
     }
 
     public void setCommission(double commission) {
-        this.commission = Recount.doubleToLong(commission);
+        this.commission = Converter.doubleToLong(commission);
     }
 
-    public Currency getCurrentCurrency() {
-        return currentCurrency;
+    public Currency getCurrency() {
+        return currency;
     }
 
-    public void setCurrentCurrency(Currency NewCurrency) {
-        changeCurrency(NewCurrency);
-        currentCurrency = NewCurrency;
+    public void setCurrency(Currency currency) {
+        Currency oldCurrency = this.currency;
+        this.currency = currency;
+        convertCurrency(oldCurrency, currency);
     }
 
-    // метод, вычитающий комиссию из остатка
-    public void commissionFromBalance() throws InsufficientFundsException {
+    public void debitCommissionFromBalance() throws InsufficientFundsException {
         if (commission > getBalance()) {
             throw new InsufficientFundsException();
         }
         balance -= commission;
     }
 
-    //  метод пополнения счета
     public void addToBalance(double value) throws InsufficientFundsException {
-        if (value < 0 || 0.1 - value > balance) {
+        if (value < ZERO || ZERO - value > balance) {
             throw new InsufficientFundsException();
         }
-        this.balance += Recount.doubleToLong(value);
+        this.balance += Converter.doubleToLong(value);
     }
 
-    // метод списывания суммы со счёта
-    public void deductFromTheBalance(double value) throws InsufficientFundsException {
+    public void debitTheBalance(double value) throws InsufficientFundsException {
         if (value > balance) {
             throw new InsufficientFundsException();
         }
-        balance -= Recount.doubleToLong(value);
+        balance -= Converter.doubleToLong(value);
+    }
+
+    private void convertCurrency(Currency oldCurrency, Currency newCurrency) {
+        commission = Converter.doubleToLong(
+                Converter.recountValue(
+                        Converter.longToDouble(commission),
+                        oldCurrency,
+                        newCurrency
+                )
+        );
+        balance = Converter.doubleToLong(
+                Converter.recountValue(
+                        Converter.longToDouble(balance),
+                        oldCurrency,
+                        newCurrency
+                )
+        );
     }
 
     @Override
@@ -110,26 +129,9 @@ public abstract class Account {
         final StringBuilder sb = new StringBuilder("Account{");
         sb.append("balance=").append(balance);
         sb.append(", id=").append(id);
-        sb.append(", сommission=").append(commission);
-        sb.append(", currentСurrency=").append(currentCurrency);
+        sb.append(", commission=").append(commission);
+        sb.append(", currency=").append(currency);
         sb.append('}');
         return sb.toString();
-    }
-
-    private void changeCurrency(Currency newCurrency) {
-        commission = Recount.doubleToLong(
-                Recount.recountValue(
-                        Recount.longToDouble(commission),
-                        currentCurrency,
-                        newCurrency
-                )
-        );
-        balance = Recount.doubleToLong(
-                Recount.recountValue(
-                        Recount.longToDouble(balance),
-                        currentCurrency,
-                        newCurrency
-                )
-        );
     }
 }

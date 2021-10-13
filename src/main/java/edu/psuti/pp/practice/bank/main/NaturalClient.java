@@ -6,33 +6,50 @@
 package edu.psuti.pp.practice.bank.main;
 
 import edu.psuti.pp.practice.bank.service.Client;
-import edu.psuti.pp.practice.bank.service.Recount;
+import edu.psuti.pp.practice.bank.service.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NaturalClient implements Client {
-
+    private static final int ZERO = 0;
     private final List<Account> accountList;
-    private final static List<Account> default_accounts = new ArrayList<>();
-    private final String Name;
-    private final String Surname;
-    private final int Seria;  // Серия паспорт
-    private final int PassportNumber;
+    private final String firstName;
+    private final String lastName;
+    private final String middleName;
+    private final int passportTally;
+    private final int passportNumber;
 
-    public NaturalClient(String Name, String surname, int Seria, int passportNumber) {
-        this(Name, surname, Seria, passportNumber, default_accounts);
+    public NaturalClient(String firstName,
+                         String middleName,
+                         String lastName,
+                         int passportTally,
+                         int passportNumber) {
+        this(
+                firstName,
+                middleName,
+                lastName,
+                passportTally,
+                passportNumber,
+                new ArrayList<>()
+        );
     }
 
-    public NaturalClient(String Name, String surname, int Seria, int passportNumber, List<Account> accountList) {
-        this.Name = Name;
-        this.Surname = surname;
-        this.Seria = Seria;
-        this.PassportNumber = passportNumber;
+    public NaturalClient(String firstName,
+                         String middleName,
+                         String lastName,
+                         int passportTally,
+                         int passportNumber,
+                         List<Account> accountList) {
+
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.passportTally = passportTally;
+        this.passportNumber = passportNumber;
         this.accountList = new ArrayList<>(accountList);
     }
 
-    // метод, возвращающий ссылку на счёт по его уникальному номеру
     @Override
     public Account getLinkToAccount(int id) throws NullPointerException {
         for (Account account : accountList) {
@@ -43,19 +60,16 @@ public class NaturalClient implements Client {
         return null;
     }
 
-    // метод, возвращающий массив всех счетов
     @Override
     public List<Account> getAccountList() {
         return new ArrayList<>(accountList);
     }
 
-    // возвращающий список (класс ArrayList<Account>) счетов дебетовых карт
     @Override
     public List<Account> getDebitList() {
         return getListOfType(DebitAccount.class);
     }
 
-    // метод, возвращающий список (класс ArrayList<Account>) счетов кредитных карт
     @Override
     public List<Account> getCreditList() {
         return getListOfType(CreditAccount.class);
@@ -71,11 +85,9 @@ public class NaturalClient implements Client {
         return result;
     }
 
-
-    // метод, возвращающий суммарный остаток на всех дебетовых счетах
     @Override
-    public double getDebitBalance() {
-        double result = 0.0;
+    public double getDebitAccountsBalance() {
+        double result = ZERO;
         for (Account i : accountList) {
             if (i instanceof DebitAccount) {
                 result += i.getBalance();
@@ -84,53 +96,45 @@ public class NaturalClient implements Client {
         return result;
     }
 
-    // метод, возвращающий сумму долга клиента (сумма начисленных процентов
-    // и комиссионных по всем кредитным счетам, а также отрицательный остаток по картам)
     @Override
-    public double getDuty() {
-        double result = 0.0;
+    public double getDebt() {
+        double result = ZERO;
         for (Account account : accountList) {
             if (account instanceof CreditAccount) {
                 result += ((CreditAccount) account).getAssessedPercent() +
                         (((CreditAccount) account).getAssessedCommission());
             }
-            if (account.getBalance() < 0.1) {
+            if (account.getBalance() < 0) {
                 result += account.getBalance();
             }
         }
         return result;
     }
 
-    // метод, возвращающий список (класс ArrayList<Account>) счетов с
-    //   положительным остатком на счете
     @Override
-    public List<Account> getPositiveSummaryBalance() {
-        List<Account> summaryPositiveBalance = new ArrayList<>();
+    public List<Account> getAffirmativeSummaryBalance() {
+        List<Account> summaryAffirmativeBalance = new ArrayList<>();
         for (Account account : accountList) {
-            if (account.getBalance() > 0.0) {
-                summaryPositiveBalance.add(account);
+            if (account.getBalance() > ZERO) {
+                summaryAffirmativeBalance.add(account);
             }
         }
-        return summaryPositiveBalance;
+        return summaryAffirmativeBalance;
     }
 
-    // метод удаления счета по его номеру
     @Override
     public void deleteAccount(int id) {
         accountList.removeIf(i -> i.getId() == id);
 
     }
 
-    // метод добавления счета (принимает в качестве
-    // входного параметра ссылку на счет)
     @Override
     public void addAccount(Account account) {
         accountList.add(account);
     }
 
-    // метод списывания средств со счета (принимает номер счета и размер суммы)
     @Override
-    public void decreaseAccount(int id, double value) {
+    public void debitBalanceById(int id, double value) {
         for (Account account : accountList) {
             if (account.getId() == id) {
                 account.balance -= value;
@@ -139,9 +143,8 @@ public class NaturalClient implements Client {
         }
     }
 
-    // метод пополнения счета (принимает номер счета и размер суммы)
     @Override
-    public void increaseAccount(int id, double value) {
+    public void addToBalanceById(int id, double value) {
         for (Account account : accountList) {
             if (account.getId() == id) {
                 account.balance += value;
@@ -150,35 +153,31 @@ public class NaturalClient implements Client {
         }
     }
 
-    // метод, возвращающий суммарный остаток на всех счетах
     public double getSummaryBalance() {
-        double summaryBalance = 0.0;
+        double summaryBalance = ZERO;
         for (Account account : accountList) {
             summaryBalance += account.getBalance();
         }
         return summaryBalance;
     }
 
-    // метод уменьшения размера остатка счета
-    // (принимает ссылку на счет и размер суммы)
-    public void decBalance(Account account, double sum) {
-        account.balance = Recount.doubleToLong(account.getBalance() - sum);
+    public void debitBalanceByAccount(Account account, double value) {
+        account.balance = Converter.doubleToLong(account.getBalance() - value);
     }
 
-    //  метод увеличения размера остатка счета (принимает ссылку на
-    // счет и размер суммы)
-    public void incBalance(Account account, double sum) {
-        account.balance += sum;
+    public void addToBalanceByAccount(Account account, double value) {
+        account.balance += value;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("NaturalClient{");
         sb.append("accountList=").append(accountList);
-        sb.append(", Name='").append(Name).append('\'');
-        sb.append(", Surname='").append(Surname).append('\'');
-        sb.append(", Seria=").append(Seria);
-        sb.append(", PassportNumber=").append(PassportNumber);
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", middleName='").append(middleName).append('\'');
+        sb.append(", passportTally=").append(passportTally);
+        sb.append(", passportNumber=").append(passportNumber);
         sb.append('}');
         return sb.toString();
     }

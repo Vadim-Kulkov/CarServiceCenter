@@ -5,11 +5,7 @@
 
 package edu.psuti.pp.practice.bank.main;
 
-/*
-Этот класс не добавляет свои методы и поля, и не переопределяет методы и поля
-суперкласса. Класс определяет аналогичные суперклассу конструкторы, в которых
-просто вызывает соответствующий конструктор суперкласса
-*/
+
 public class DebitAccount extends Account {
 
     public DebitAccount(int id) {
@@ -17,7 +13,7 @@ public class DebitAccount extends Account {
                 id,
                 DEFAULT_BALANCE,
                 DEFAULT_COMMISSION,
-                DEFAULT_CURRENT_CURRENCY
+                DEFAULT_CURRENCY
         );
     }
 
@@ -26,7 +22,7 @@ public class DebitAccount extends Account {
                 id,
                 balance,
                 DEFAULT_COMMISSION,
-                DEFAULT_CURRENT_CURRENCY
+                DEFAULT_CURRENCY
         );
     }
 
@@ -35,7 +31,7 @@ public class DebitAccount extends Account {
                 id,
                 balance,
                 commission,
-                DEFAULT_CURRENT_CURRENCY
+                DEFAULT_CURRENCY
         );
     }
 
@@ -59,7 +55,7 @@ public class DebitAccount extends Account {
         return Double.compare(that.getBalance(), getBalance()) == 0 &&
                 Double.compare(that.getCommission(), getCommission()) == 0 &&
                 that.getId() == getId() &&
-                that.getCurrentCurrency() == getCurrentCurrency();
+                that.getCurrency() == getCurrency();
     }
 
     @Override
@@ -67,18 +63,13 @@ public class DebitAccount extends Account {
         return 111_111 ^
                 Double.hashCode(getBalance()) ^
                 Double.hashCode(getCommission()) ^
-                getCurrentCurrency().hashCode() ^
+                getCurrency().hashCode() ^
                 getId();
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DebitAccount{");
-        sb.append("id=")
-                .append(getId());
-        sb.append(", balance=").append(getBalance());
-        sb.append(", currentCurrency=").append(getCurrentCurrency());
-        sb.append(", Commission=").append(getCommission());
         sb.append('}');
         return sb.toString();
     }
