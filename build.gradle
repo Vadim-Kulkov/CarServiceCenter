@@ -35,3 +35,4 @@ allprojects {
         ignoreFailures = false
     }
 }
+build.dependsOn checkstyleMain
