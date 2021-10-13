@@ -17,7 +17,7 @@ public class Converter {
         return (value / 100);
     }
 
-    private static int findFirstPosition(Currency value) {
+    private static int findPosition(Currency value) {
         if (value == Currency.USD) {
             return 0;
         } else if (value == Currency.EUR) {
@@ -37,8 +37,8 @@ public class Converter {
     }
 
     public static double recountValue(double value, Currency old, Currency newCurrency) {
-        int firstPosition = findFirstPosition(old),
-                secondPosition = findFirstPosition(newCurrency);
+        int firstPosition = findPosition(old),
+                secondPosition = findPosition(newCurrency);
 
         return value * Currency.CURRENCY_RATIOS[firstPosition][secondPosition];
     }
