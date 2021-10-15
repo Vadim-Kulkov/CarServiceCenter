@@ -10,6 +10,7 @@ import edu.psuti.pp.practice.bank.service.Converter;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class CreditAccount extends Account {
 
@@ -37,15 +38,11 @@ public class CreditAccount extends Account {
         this(id, balance, commission, DEFAULT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
-    public CreditAccount(int id,
-                         double balance,
-                         double commission,
-                         Currency currency) {
+    public CreditAccount(int id, double balance, double commission, Currency currency) {
         this(id, balance, commission, currency, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
     }
 
-    public CreditAccount(int id,
-                         double balance,
+    public CreditAccount(int id, double balance,
                          double commission,
                          Currency currentCurrency,
                          double percentRate,
@@ -109,12 +106,16 @@ public class CreditAccount extends Account {
             throw new InsufficientFundsException();
         }
         value = repayAssessedCommissionByValue(value);
-        if (value > 0) {
+        if (isValueMoreThanZero(value)) {
             value = repayAssessedPercentByValue(value);
         }
-        if (value > 0) {
+        if (isValueMoreThanZero(value)) {
             balance += Converter.doubleToLong(value);
         }
+    }
+
+    private boolean isValueMoreThanZero(double value) {
+        return value > 0;
     }
 
     private int getActualDaysOfYear() {
@@ -126,10 +127,10 @@ public class CreditAccount extends Account {
     private double repayAssessedCommissionByValue(double value) {
         if (assessedCommission == value) {
             assessedCommission = 0;
-            return 0.0;
+            return 0;
         } else if (assessedCommission > value) {
             assessedCommission -= value;
-            return 0.0;
+            return 0;
         } else {
             value -= assessedCommission;
             assessedCommission = 0;
@@ -140,18 +141,16 @@ public class CreditAccount extends Account {
     private double repayAssessedPercentByValue(double value) {
         if (assessedPercent == value) {
             assessedPercent = 0;
-            return 0.0;
+            return 0;
         } else if (assessedPercent > value) {
             assessedPercent -= value;
-            return 0.0;
+            return 0;
         } else {
             value -= assessedPercent;
             assessedPercent = 0;
             return value;
         }
-
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -175,16 +174,16 @@ public class CreditAccount extends Account {
 
     @Override
     public int hashCode() {
-        return 111_111 ^
-                Double.hashCode(getBalance()) ^
-                Double.hashCode(getPercentRate()) ^
-                Double.hashCode(getCreditCardLimit()) ^
-                Double.hashCode(getAssessedCommission()) ^
-                Double.hashCode(getAssessedPercent()) ^
-                Double.hashCode(getCommission()) ^
-                getCurrency().hashCode() ^
-                getId();
-
+        return Objects.hash(
+                getBalance(),
+                getPercentRate(),
+                getCreditCardLimit(),
+                getAssessedCommission(),
+                getAssessedPercent(),
+                getCommission(),
+                getCurrency(),
+                getId()
+        );
     }
 
     @Override

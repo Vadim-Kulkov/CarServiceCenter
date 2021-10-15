@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NaturalClient implements Client {
-    private static final int ZERO = 0;
     private final List<Account> accountList;
     private final String firstName;
     private final String lastName;
@@ -51,7 +50,7 @@ public class NaturalClient implements Client {
     }
 
     @Override
-    public Account getLinkToAccount(int id) throws NullPointerException {
+    public Account getLinkToAccount(int id) {
         for (Account account : accountList) {
             if (account.getId() == id) {
                 return account;
@@ -87,7 +86,7 @@ public class NaturalClient implements Client {
 
     @Override
     public double getDebitAccountsBalance() {
-        double result = ZERO;
+        double result = 0;
         for (Account i : accountList) {
             if (i instanceof DebitAccount) {
                 result += i.getBalance();
@@ -98,7 +97,7 @@ public class NaturalClient implements Client {
 
     @Override
     public double getDebt() {
-        double result = ZERO;
+        double result = 0;
         for (Account account : accountList) {
             if (account instanceof CreditAccount) {
                 result += ((CreditAccount) account).getAssessedPercent() +
@@ -115,7 +114,7 @@ public class NaturalClient implements Client {
     public List<Account> getAffirmativeSummaryBalance() {
         List<Account> summaryAffirmativeBalance = new ArrayList<>();
         for (Account account : accountList) {
-            if (account.getBalance() > ZERO) {
+            if (account.getBalance() > 0) {
                 summaryAffirmativeBalance.add(account);
             }
         }
@@ -135,26 +134,17 @@ public class NaturalClient implements Client {
 
     @Override
     public void debitBalanceById(int id, double value) {
-        for (Account account : accountList) {
-            if (account.getId() == id) {
-                account.balance -= value;
-                return;
-            }
-        }
+        getLinkToAccount(id).balance -= value;
     }
 
     @Override
     public void addToBalanceById(int id, double value) {
-        for (Account account : accountList) {
-            if (account.getId() == id) {
-                account.balance += value;
-                return;
-            }
-        }
+        getLinkToAccount(id).balance += value;
     }
 
+
     public double getSummaryBalance() {
-        double summaryBalance = ZERO;
+        double summaryBalance = 0;
         for (Account account : accountList) {
             summaryBalance += account.getBalance();
         }

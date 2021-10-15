@@ -13,7 +13,6 @@ public abstract class Account {
     protected static final long DEFAULT_BALANCE = 0;
     protected static final long DEFAULT_COMMISSION = 0;
     protected static final Currency DEFAULT_CURRENCY = Currency.USD;
-    private static final int ZERO = 0;
 
     protected long balance;
     private int id;
@@ -22,34 +21,18 @@ public abstract class Account {
     protected Currency currency;
 
     public Account(int id) {
-        this(id,
-                DEFAULT_BALANCE,
-                DEFAULT_COMMISSION,
-                DEFAULT_CURRENCY
-        );
+        this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENCY);
     }
 
     public Account(int id, double balance) {
-        this(id,
-                balance,
-                DEFAULT_COMMISSION,
-                DEFAULT_CURRENCY
-        );
+        this(id, balance, DEFAULT_COMMISSION, DEFAULT_CURRENCY);
     }
 
     public Account(int id, double balance, double commission) {
-        this(id,
-                balance,
-                commission,
-                DEFAULT_CURRENCY
-        );
+        this(id, balance, commission, DEFAULT_CURRENCY);
     }
 
-    public Account(int id,
-                   double balance,
-                   double commission,
-                   Currency currentCurrency) {
-
+    public Account(int id, double balance, double commission, Currency currentCurrency) {
         this.id = id;
         this.balance = Converter.doubleToLong(balance);
         this.commission = Converter.doubleToLong(commission);
@@ -94,7 +77,7 @@ public abstract class Account {
     }
 
     public void addToBalance(double value) throws InsufficientFundsException {
-        if (value < ZERO || ZERO - value > balance) {
+        if (value < 0 || Math.abs(value) > balance) {
             throw new InsufficientFundsException();
         }
         this.balance += Converter.doubleToLong(value);

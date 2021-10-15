@@ -18,22 +18,7 @@ public class Converter {
     }
 
     private static int findPosition(Currency value) {
-        if (value == Currency.USD) {
-            return 0;
-        } else if (value == Currency.EUR) {
-            return 1;
-        } else if (value == Currency.JOY) {
-            return 2;
-        } else if (value == Currency.TRY) {
-            return 3;
-        } else if (value == Currency.AED) {
-            return 4;
-        } else if (value == Currency.RUB) {
-            return 5;
-        } else {
-            return 6;
-        }
-
+        return value.getCurrencyNumber();
     }
 
     public static double recountValue(double value, Currency old, Currency newCurrency) {
@@ -41,13 +26,6 @@ public class Converter {
                 secondPosition = findPosition(newCurrency);
 
         return value * Currency.CURRENCY_RATIOS[firstPosition][secondPosition];
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Converter{");
-        sb.append('}');
-        return sb.toString();
     }
 }
 

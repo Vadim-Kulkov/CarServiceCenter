@@ -6,6 +6,8 @@
 package edu.psuti.pp.practice.bank.main;
 
 
+import java.util.Objects;
+
 public class DebitAccount extends Account {
 
     public DebitAccount(int id) {
@@ -38,8 +40,8 @@ public class DebitAccount extends Account {
     public DebitAccount(int id,
                         double balance,
                         double commission,
-                        Currency valut) {
-        super(id, balance, commission, valut);
+                        Currency currency) {
+        super(id, balance, commission, currency);
     }
 
 
@@ -60,11 +62,12 @@ public class DebitAccount extends Account {
 
     @Override
     public int hashCode() {
-        return 111_111 ^
-                Double.hashCode(getBalance()) ^
-                Double.hashCode(getCommission()) ^
-                getCurrency().hashCode() ^
-                getId();
+        return Objects.hash(
+                getBalance(),
+                getCommission(),
+                getCurrency(),
+                getId()
+        );
     }
 
     @Override

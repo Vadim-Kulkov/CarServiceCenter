@@ -7,12 +7,22 @@ package edu.psuti.pp.practice.bank.main;
 
 public enum Currency {
 
-    USD,
-    EUR,
-    JOY,
-    TRY,
-    AED,
-    RUB;
+    USD(0),
+    EUR(1),
+    JOY(2),
+    TRY(3),
+    AED(4),
+    RUB(5);
+
+    private final int currencyNumber;
+
+    Currency(int value) {
+        this.currencyNumber = value;
+    }
+
+    public int getCurrencyNumber() {
+        return currencyNumber;
+    }
 
     public static final double[][] CURRENCY_RATIOS = {
             // USD-USD, USD-EUR, USD-JOY, USD-TRY, USD-AED, USD-RUB

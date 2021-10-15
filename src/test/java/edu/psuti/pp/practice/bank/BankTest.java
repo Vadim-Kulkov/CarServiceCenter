@@ -32,6 +32,8 @@ public class BankTest {
         System.out.println("Новое значение :");
         System.out.println(AccountNumberGenerator.getNext());
         System.out.println(AccountNumberGenerator.getCurrent());
+        System.out.println(">toString ");
+        System.out.println(a);
     }
 
     private static void testCreditAccountCounstructors() {
