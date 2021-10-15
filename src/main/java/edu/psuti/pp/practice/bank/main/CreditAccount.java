@@ -204,8 +204,7 @@ public class CreditAccount extends Account {
                 .append(", commission=")
                 .append(getCommission())
                 .append(", currency=")
-                .append(getCurrency())
-                .append('}');
+                .append(getCurrency()).append('}');
         return sb.toString();
     }
 }
