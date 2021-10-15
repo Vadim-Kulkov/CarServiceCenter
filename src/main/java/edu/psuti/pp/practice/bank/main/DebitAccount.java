@@ -70,9 +70,17 @@ public class DebitAccount extends Account {
         );
     }
 
-    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DebitAccount{");
+        sb.append("balance=")
+                .append(getBalance())
+                .append(", id=")
+                .append(getId())
+                .append(", commission=")
+                .append(getCommission())
+                .append(", currency=")
+                .append(getCurrency())
+                .append('}');
         sb.append('}');
         return sb.toString();
     }

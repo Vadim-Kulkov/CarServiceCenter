@@ -189,11 +189,23 @@ public class CreditAccount extends Account {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CreditAccount{");
-        sb.append("percentRate=").append(percentRate);
-        sb.append(", creditCardLimit=").append(creditCardLimit);
-        sb.append(", assessedPercent=").append(assessedPercent);
-        sb.append(", assessedCommission=").append(assessedCommission);
-        sb.append('}');
+        sb.append("percentRate=")
+                .append(percentRate)
+                .append(", creditCardLimit=")
+                .append(creditCardLimit)
+                .append(", assessedPercent=")
+                .append(assessedPercent)
+                .append(", assessedCommission=")
+                .append(assessedCommission)
+                .append("balance=")
+                .append(getBalance())
+                .append(", id=")
+                .append(getId())
+                .append(", commission=")
+                .append(getCommission())
+                .append(", currency=")
+                .append(getCurrency())
+                .append('}');
         return sb.toString();
     }
 }

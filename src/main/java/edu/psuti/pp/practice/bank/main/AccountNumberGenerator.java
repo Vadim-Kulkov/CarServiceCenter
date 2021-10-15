@@ -26,8 +26,9 @@ public class AccountNumberGenerator {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AccountNumberGenerator{");
-        sb.append("value= ").append(value);
-        sb.append('}');
+        sb.append("value= ")
+                .append(value)
+                .append('}');
         return sb.toString();
     }
 }

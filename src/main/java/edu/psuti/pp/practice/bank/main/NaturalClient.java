@@ -162,13 +162,19 @@ public class NaturalClient implements Client {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("NaturalClient{");
-        sb.append("accountList=").append(accountList);
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", middleName='").append(middleName).append('\'');
-        sb.append(", passportTally=").append(passportTally);
-        sb.append(", passportNumber=").append(passportNumber);
-        sb.append('}');
+        sb.append("accountList=")
+                .append(accountList)
+                .append(", firstName='")
+                .append(firstName).append('\'')
+                .append(", lastName='")
+                .append(lastName).append('\'')
+                .append(", middleName='")
+                .append(middleName)
+                .append('\'')
+                .append(", passportTally=")
+                .append(passportTally)
+                .append(", passportNumber=").append(passportNumber)
+                .append('}');
         return sb.toString();
     }
 }

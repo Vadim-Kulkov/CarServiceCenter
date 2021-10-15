@@ -110,11 +110,15 @@ public abstract class Account {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Account{");
-        sb.append("balance=").append(balance);
-        sb.append(", id=").append(id);
-        sb.append(", commission=").append(commission);
-        sb.append(", currency=").append(currency);
-        sb.append('}');
+        sb.append("balance=")
+                .append(balance)
+                .append(", id=")
+                .append(id)
+                .append(", commission=")
+                .append(commission)
+                .append(", currency=")
+                .append(currency)
+                .append('}');
         return sb.toString();
     }
 }
