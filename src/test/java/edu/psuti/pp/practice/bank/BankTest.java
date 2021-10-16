@@ -215,7 +215,7 @@ public class BankTest {
                 1552, 34);
         System.out.println(">>>Тест методов");
         System.out.println(">метод, возвращающий ссылку на счёт по его номеру");
-        System.out.println(c2.getLinkToAccount(333).getId());
+        System.out.println(c2.getAccount(333).getId());
         System.out.println('\n' + ">метод,возвращающий массив всех счетов");
         List<Account> test12312 = c2.getAccountList();
         for (Account i : test12312) {
@@ -278,13 +278,13 @@ public class BankTest {
         System.out.println(c2.getSummaryBalance());
         System.out.println(">ToString" + ' ' + c2); // метод уменьшения размера остатка счета
         System.out.println(">метод уменьшения размера остатка счета");
-        System.out.println(c2.getLinkToAccount(444).getBalance());
-        c2.debitBalanceByAccount(c2.getLinkToAccount(444), 12);
-        System.out.println(c2.getLinkToAccount(444).getBalance());
+        System.out.println(c2.getAccount(444).getBalance());
+        c2.debitBalanceByAccount(c2.getAccount(444), 12);
+        System.out.println(c2.getAccount(444).getBalance());
         //  метод увеличения размера остатка счета
         System.out.println(">метод увеличения размера остатка счета");
-        System.out.println(c2.getLinkToAccount(444).getBalance());
-        c2.addToBalanceByAccount(c2.getLinkToAccount(444), 1322);
-        System.out.println(c2.getLinkToAccount(444).getBalance());
+        System.out.println(c2.getAccount(444).getBalance());
+        c2.addToBalanceByAccount(c2.getAccount(444), 1322);
+        System.out.println(c2.getAccount(444).getBalance());
     }
 }

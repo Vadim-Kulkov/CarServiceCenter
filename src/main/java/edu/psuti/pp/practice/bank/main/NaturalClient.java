@@ -50,7 +50,7 @@ public class NaturalClient implements Client {
     }
 
     @Override
-    public Account getLinkToAccount(int id) {
+    public Account getAccount(int id) {
         for (Account account : accountList) {
             if (account.getId() == id) {
                 return account;
@@ -134,12 +134,12 @@ public class NaturalClient implements Client {
 
     @Override
     public void debitBalanceById(int id, double value) {
-        getLinkToAccount(id).balance -= value;
+        getAccount(id).balance -= value;
     }
 
     @Override
     public void addToBalanceById(int id, double value) {
-        getLinkToAccount(id).balance += value;
+        getAccount(id).balance += value;
     }
 
 

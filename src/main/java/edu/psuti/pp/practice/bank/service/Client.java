@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface Client {
 
-    Account getLinkToAccount(int id);
+    Account getAccount(int id);
 
     List<Account> getAccountList();
 
