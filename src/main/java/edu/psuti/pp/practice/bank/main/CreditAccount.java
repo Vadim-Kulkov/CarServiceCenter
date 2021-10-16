@@ -125,31 +125,29 @@ public class CreditAccount extends Account {
     }
 
     private double repayAssessedCommissionByValue(double value) {
-        if (assessedCommission == value) {
-            assessedCommission = 0;
-            return 0;
-        } else if (assessedCommission > value) {
-            assessedCommission -= value;
-            return 0;
-        } else {
-            value -= assessedCommission;
-            assessedCommission = 0;
-            return value;
-        }
+        double[] result = repayByValue(value, assessedCommission);
+        assessedCommission = result[1];
+        return result[0];
     }
 
     private double repayAssessedPercentByValue(double value) {
-        if (assessedPercent == value) {
-            assessedPercent = 0;
-            return 0;
-        } else if (assessedPercent > value) {
-            assessedPercent -= value;
-            return 0;
+        double[] result = repayByValue(value, assessedCommission);
+        assessedPercent = result[1];
+        return result[0];
+    }
+
+    private double[] repayByValue(double value, double accruedValue) {
+        double[] result = new double[2];
+        if (accruedValue >= value) {
+            accruedValue -= value;
+            value = 0;
         } else {
-            value -= assessedPercent;
-            assessedPercent = 0;
-            return value;
+            value -= accruedValue;
+            accruedValue = 0;
         }
+        result[0] = value;
+        result[1] = accruedValue;
+        return result;
     }
 
     @Override
