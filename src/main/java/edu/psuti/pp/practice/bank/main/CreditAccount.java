@@ -27,7 +27,14 @@ public class CreditAccount extends Account {
     private double assessedCommission;
 
     public CreditAccount(int id) {
-        this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENCY, DEFAULT_PERCENT_RATE, DEFAULT_CREDIT_CARD_LIMIT);
+        this(
+                id,
+                DEFAULT_BALANCE,
+                DEFAULT_COMMISSION,
+                DEFAULT_CURRENCY,
+                DEFAULT_PERCENT_RATE,
+                DEFAULT_CREDIT_CARD_LIMIT
+        );
     }
 
     public CreditAccount(int id, double balance) {

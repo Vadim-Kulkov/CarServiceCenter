@@ -18,7 +18,7 @@ public abstract class Account {
     private int id;
 
     private long commission;
-    protected Currency currency;
+    private Currency currency;
 
     public Account(int id) {
         this(id, DEFAULT_BALANCE, DEFAULT_COMMISSION, DEFAULT_CURRENCY);
