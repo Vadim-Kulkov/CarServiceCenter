@@ -26,6 +26,8 @@ public class CreditAccount extends Account {
 
     private double assessedCommission;
 
+    private double[] paidValues = new double[2];
+
     public CreditAccount(int id) {
         this(
                 id,
@@ -112,10 +114,16 @@ public class CreditAccount extends Account {
         if (value > creditCardLimit) {
             throw new InsufficientFundsException();
         }
-        value = repayAssessedCommissionByValue(value);
+        repayByValue(value, assessedCommission);
+        value = paidValues[0];
+        assessedCommission = paidValues[1];
+
         if (isValueMoreThanZero(value)) {
-            value = repayAssessedPercentByValue(value);
+            repayByValue(value, assessedPercent);
         }
+        value = paidValues[0];
+        assessedPercent = paidValues[1];
+
         if (isValueMoreThanZero(value)) {
             balance += Converter.doubleToLong(value);
         }
@@ -131,20 +139,7 @@ public class CreditAccount extends Account {
         return cal.getActualMaximum(Calendar.DAY_OF_YEAR);
     }
 
-    private double repayAssessedCommissionByValue(double value) {
-        double[] result = repayByValue(value, assessedCommission);
-        assessedCommission = result[1];
-        return result[0];
-    }
-
-    private double repayAssessedPercentByValue(double value) {
-        double[] result = repayByValue(value, assessedCommission);
-        assessedPercent = result[1];
-        return result[0];
-    }
-
-    private double[] repayByValue(double value, double accruedValue) {
-        double[] result = new double[2];
+    private void repayByValue(double value, double accruedValue) {
         if (accruedValue >= value) {
             accruedValue -= value;
             value = 0;
@@ -152,9 +147,8 @@ public class CreditAccount extends Account {
             value -= accruedValue;
             accruedValue = 0;
         }
-        result[0] = value;
-        result[1] = accruedValue;
-        return result;
+        paidValues[0] = value;
+        paidValues[1] = accruedValue;
     }
 
     @Override
