@@ -26,8 +26,6 @@ public class CreditAccount extends Account {
 
     private double assessedCommission;
 
-    private double[] paidValues = new double[2];
-
     public CreditAccount(int id) {
         this(
                 id,
@@ -114,41 +112,34 @@ public class CreditAccount extends Account {
         if (value > creditCardLimit) {
             throw new InsufficientFundsException();
         }
-        repayByValue(value, assessedCommission);
-        value = paidValues[0];
-        assessedCommission = paidValues[1];
+        value = repayByValue(value);
 
-        if (isValueMoreThanZero(value)) {
-            repayByValue(value, assessedPercent);
-        }
-        value = paidValues[0];
-        assessedPercent = paidValues[1];
-
-        if (isValueMoreThanZero(value)) {
+        if (value > 0) {
             balance += Converter.doubleToLong(value);
         }
     }
 
-    private boolean isValueMoreThanZero(double value) {
-        return value > 0;
+    private double repayByValue(double value) {
+        double[] assesedVariables = {assessedCommission, assessedPercent};
+        for (int i = 0; i < 2; i++) {
+            if (assesedVariables[i] < value) {
+                value -= assesedVariables[i];
+                assesedVariables[i] = 0;
+            } else {
+                assesedVariables[i] -= value;
+                value = 0;
+                break;
+            }
+        }
+        assessedCommission = assesedVariables[0];
+        assessedPercent = assesedVariables[1];
+        return value;
     }
 
     private int getActualDaysOfYear() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         return cal.getActualMaximum(Calendar.DAY_OF_YEAR);
-    }
-
-    private void repayByValue(double value, double accruedValue) {
-        if (accruedValue >= value) {
-            accruedValue -= value;
-            value = 0;
-        } else {
-            value -= accruedValue;
-            accruedValue = 0;
-        }
-        paidValues[0] = value;
-        paidValues[1] = accruedValue;
     }
 
     @Override
