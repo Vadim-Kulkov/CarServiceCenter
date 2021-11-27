@@ -11,7 +11,7 @@ public class City {
     private Long idCity;
 
     @Column
-    @DefaultValue("Value")
+    //@DefaultValue("Value")
     private String title;
 
     @Column

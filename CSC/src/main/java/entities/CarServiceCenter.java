@@ -30,7 +30,7 @@ public class CarServiceCenter {
     private List<Customer> customers;
     @Column
     @OneToMany
-    @JoinColumn(name = "repairs")
+    @JoinColumn(name = "repairs", table = "repair")
     private List<Repair> repairs;
 
     public String getAddress() {
