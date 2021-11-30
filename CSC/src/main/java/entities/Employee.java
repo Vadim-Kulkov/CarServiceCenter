@@ -2,29 +2,42 @@ package entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "employee")
 public class Employee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEmployee;
-    @Column
+    @Column(nullable = false)
     private String firstName;
-    @Column
+
+    @Column(nullable = false)
     private String lastName;
-    @Column
+
+    @Column(nullable = false)
     private String birthDate;
-    @Column
+
+    @Column(nullable = false)
     private BigDecimal salary;
-    @Column
+
+    @Id
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column
+
     @ManyToOne
-    @JoinColumn(name = "employees", table = "carServiceCenter")
+    @JoinColumn(nullable = false, name = "CarServiceCenter")
     private CarServiceCenter center;
 
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+    private List<Repair> repairs;
+
+    public List<Repair> getRepairs() {
+        return repairs;
+    }
+
+    public void setRepairs(List<Repair> repairs) {
+        this.repairs = repairs;
+    }
 
     public String getBirthDate() {
         return birthDate;
@@ -58,14 +71,6 @@ public class Employee {
         return firstName;
     }
 
-    public Long getIdEmployee() {
-        return idEmployee;
-    }
-
-    public void setIdEmployee(Long idEmployee) {
-        this.idEmployee = idEmployee;
-    }
-
     public String getLastName() {
         return lastName;
     }
@@ -80,5 +85,23 @@ public class Employee {
 
     public void setSalary(BigDecimal salary) {
         this.salary = salary;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return firstName.equals(employee.firstName) &&
+                lastName.equals(employee.lastName) &&
+                birthDate.equals(employee.birthDate) &&
+                salary.equals(employee.salary) &&
+                email.equals(employee.email) &&
+                center.equals(employee.center) && Objects.equals(repairs, employee.repairs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, birthDate, salary, email, center, repairs);
     }
 }

@@ -1,24 +1,24 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "city")
 public class City {
 
+    @Column()
+    private String name;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCity;
-
-    @Column
-    //@DefaultValue("Value")
-    private String title;
-
-    @Column
+    @Column(unique = true, nullable = false)
     private String code;
 
-    @Column
+    @Column()
     private Boolean defaultCity;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
+    private List<CarServiceCenter> centers;
 
     public String getCode() {
         return code;
@@ -36,19 +36,25 @@ public class City {
         this.defaultCity = defaultCity;
     }
 
-    public Long getIdCity() {
-        return idCity;
+    @Column(name = "defaultCity")
+    public String getName() {
+        return name;
     }
 
-    public void setIdCity(Long idCity) {
-        this.idCity = idCity;
+    public void setName(String title) {
+        this.name = title;
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(name, city.name) && code.equals(city.code) && Objects.equals(defaultCity, city.defaultCity);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, code, defaultCity);
     }
 }

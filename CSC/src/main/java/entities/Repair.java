@@ -1,22 +1,23 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "repair")
 public class Repair {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRepair;
-    @Column
+    @Column(unique = true, nullable = false)
     private String description;
-    @Column
-    @ManyToOne
-    @JoinColumn(name = "idEmployee", table = "Employee")
-    private Employee employee;
-    @Column
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Worker", nullable = false)
+    private Employee employee;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CarServiceCenter", nullable = false)
     private CarServiceCenter center;
 
     public CarServiceCenter getCenter() {
@@ -43,11 +44,16 @@ public class Repair {
         this.employee = employee;
     }
 
-    public Long getIdRepair() {
-        return idRepair;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Repair repair = (Repair) o;
+        return description.equals(repair.description) && employee.equals(repair.employee) && center.equals(repair.center);
     }
 
-    public void setIdRepair(Long idRepair) {
-        this.idRepair = idRepair;
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, employee, center);
     }
 }

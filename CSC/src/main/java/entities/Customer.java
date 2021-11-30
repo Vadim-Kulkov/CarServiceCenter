@@ -3,23 +3,22 @@ package entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "customer")
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCustomer;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+
+    @Column(nullable = false)
     private String email;
-    @Column
+
+    @Id
+    @Column(nullable = false, unique = true)
     private String phone;
-    @Column
-    @ManyToMany
-    @JoinColumn(table = "carServiceCenter", name = "customers")
+
+    @ManyToMany(mappedBy = "customers", fetch = FetchType.LAZY)
     private List<CarServiceCenter> centers;
 
     public List<CarServiceCenter> getCenters() {
@@ -38,14 +37,6 @@ public class Customer {
         this.email = email;
     }
 
-    public Long getIdCustomer() {
-        return idCustomer;
-    }
-
-    public void setIdCustomer(Long idCustomer) {
-        this.idCustomer = idCustomer;
-    }
-
     public String getName() {
         return name;
     }
@@ -60,5 +51,26 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return name.equals(customer.name) &&
+                email.equals(customer.email) &&
+                phone.equals(customer.phone) &&
+                centers.equals(customer.centers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                name,
+                email,
+                phone,
+                centers
+        );
     }
 }

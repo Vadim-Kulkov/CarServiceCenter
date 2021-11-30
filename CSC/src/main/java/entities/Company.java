@@ -1,23 +1,15 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "company")
+@MappedSuperclass
 public class Company extends Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCompany;
+    @Column(nullable = false)
     private String inn;
-
-    public Long getIdCompany() {
-        return idCompany;
-    }
-
-    public void setIdCompany(Long idCompany) {
-        this.idCompany = idCompany;
-    }
 
     public String getInn() {
         return inn;
@@ -25,5 +17,20 @@ public class Company extends Customer {
 
     public void setInn(String inn) {
         this.inn = inn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Company company = (Company) o;
+        return inn.equals(company.inn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inn);
     }
 }

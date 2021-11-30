@@ -2,35 +2,36 @@ package entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "carServiceCenter")
 public class CarServiceCenter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCarServiceCenter;
-    @Column
-    private String title;
-    @Column
+    @Column(unique = true, nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String phone;
 
-    @Column
-    @OneToMany(mappedBy = "carServiceCenter")
+    @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)
     private List<Employee> employees;
 
-    @ManyToOne()
-    @JoinColumn(name = "idCity", table = "city")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Local_city", nullable = false)
     private City city;
+
     @Column
     private String address;
-    @Column
-    @ManyToMany
-    @JoinColumn(table = "customer", name = "centers")
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Company_Customers",
+            joinColumns = @JoinColumn(name = "Customer_phone", referencedColumnName = "phone"),
+            inverseJoinColumns = @JoinColumn(name = "Service_name", referencedColumnName = "name")
+    )
     private List<Customer> customers;
-    @Column
-    @OneToMany
-    @JoinColumn(name = "repairs", table = "repair")
+
+    @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)
     private List<Repair> repairs;
 
     public String getAddress() {
@@ -65,14 +66,6 @@ public class CarServiceCenter {
         this.employees = employees;
     }
 
-    public Long getIdCarServiceCenter() {
-        return idCarServiceCenter;
-    }
-
-    public void setIdCarServiceCenter(Long idCarServiceCenter) {
-        this.idCarServiceCenter = idCarServiceCenter;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -89,11 +82,24 @@ public class CarServiceCenter {
         this.repairs = repairs;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String title) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarServiceCenter that = (CarServiceCenter) o;
+        return name.equals(that.name) && phone.equals(that.phone) && Objects.equals(employees, that.employees) && city.equals(that.city) && address.equals(that.address) && Objects.equals(customers, that.customers) && Objects.equals(repairs, that.repairs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, phone, employees, city, address, customers, repairs);
     }
 }

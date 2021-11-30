@@ -9,5 +9,6 @@ public class Main {
         session = HibernateUtil
                 .getSessionFactory()
                 .openSession();
+        session.close();
     }
 }
