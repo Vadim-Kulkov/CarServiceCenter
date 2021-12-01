@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Individual extends Customer {
 
     @Id
-    @Column(name = "passportNo", nullable = false)
+    @Column(unique = true, nullable = false)
     private String passportNo;
 
     public String getPassportNo() {

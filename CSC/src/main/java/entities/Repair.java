@@ -49,7 +49,9 @@ public class Repair {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Repair repair = (Repair) o;
-        return description.equals(repair.description) && employee.equals(repair.employee) && center.equals(repair.center);
+        return description.equals(repair.description)
+                && employee.equals(repair.employee)
+                && center.equals(repair.center);
     }
 
     @Override

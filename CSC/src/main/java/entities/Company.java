@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Company extends Customer {
 
     @Id
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String inn;
 
     public String getInn() {

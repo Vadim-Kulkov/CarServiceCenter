@@ -1,4 +1,4 @@
-package test_1;
+package entitiesTest;
 
 import org.hibernate.Session;
 import org.junit.Assert;

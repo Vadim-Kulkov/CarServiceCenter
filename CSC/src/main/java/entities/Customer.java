@@ -11,7 +11,7 @@ public class Customer {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String email;
 
     @Id
@@ -58,19 +58,14 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return name.equals(customer.name) &&
-                email.equals(customer.email) &&
-                phone.equals(customer.phone) &&
-                centers.equals(customer.centers);
+        return name.equals(customer.name)
+                && email.equals(customer.email)
+                && phone.equals(customer.phone)
+                && centers.equals(customer.centers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                name,
-                email,
-                phone,
-                centers
-        );
+        return Objects.hash(name, email, phone, centers);
     }
 }

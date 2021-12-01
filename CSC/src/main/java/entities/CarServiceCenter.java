@@ -21,7 +21,7 @@ public class CarServiceCenter {
     @JoinColumn(name = "Local_city", nullable = false)
     private City city;
 
-    @Column
+    @Column(nullable = false)
     private String address;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -29,6 +29,7 @@ public class CarServiceCenter {
             joinColumns = @JoinColumn(name = "Customer_phone", referencedColumnName = "phone"),
             inverseJoinColumns = @JoinColumn(name = "Service_name", referencedColumnName = "name")
     )
+
     private List<Customer> customers;
 
     @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)
@@ -95,7 +96,13 @@ public class CarServiceCenter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CarServiceCenter that = (CarServiceCenter) o;
-        return name.equals(that.name) && phone.equals(that.phone) && Objects.equals(employees, that.employees) && city.equals(that.city) && address.equals(that.address) && Objects.equals(customers, that.customers) && Objects.equals(repairs, that.repairs);
+        return name.equals(that.name)
+                && phone.equals(that.phone)
+                && Objects.equals(employees, that.employees)
+                && city.equals(that.city)
+                && address.equals(that.address)
+                && Objects.equals(customers, that.customers)
+                && Objects.equals(repairs, that.repairs);
     }
 
     @Override

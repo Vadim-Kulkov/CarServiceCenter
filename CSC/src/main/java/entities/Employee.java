@@ -92,12 +92,13 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return firstName.equals(employee.firstName) &&
-                lastName.equals(employee.lastName) &&
-                birthDate.equals(employee.birthDate) &&
-                salary.equals(employee.salary) &&
-                email.equals(employee.email) &&
-                center.equals(employee.center) && Objects.equals(repairs, employee.repairs);
+        return firstName.equals(employee.firstName)
+                && lastName.equals(employee.lastName)
+                && birthDate.equals(employee.birthDate)
+                && salary.equals(employee.salary)
+                && email.equals(employee.email)
+                && center.equals(employee.center)
+                && Objects.equals(repairs, employee.repairs);
     }
 
     @Override

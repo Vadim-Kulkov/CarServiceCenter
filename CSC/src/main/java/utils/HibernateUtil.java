@@ -1,5 +1,6 @@
 package utils;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -7,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 
 public class HibernateUtil {
+
     private static SessionFactory sessionFactory;
 
     static {
@@ -22,11 +24,15 @@ public class HibernateUtil {
     }
 
     /**
-     * сначала получаем sessionFactory, а от него session
+     *
      *
      * @return sessionFactory
      */
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 }

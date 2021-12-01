@@ -7,14 +7,14 @@ import java.util.Objects;
 @Entity
 public class City {
 
-    @Column()
+    @Column
     private String name;
 
     @Id
     @Column(unique = true, nullable = false)
     private String code;
 
-    @Column()
+    @Column
     private Boolean defaultCity;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
@@ -50,7 +50,9 @@ public class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         City city = (City) o;
-        return Objects.equals(name, city.name) && code.equals(city.code) && Objects.equals(defaultCity, city.defaultCity);
+        return Objects.equals(name, city.name)
+                && code.equals(city.code)
+                && Objects.equals(defaultCity, city.defaultCity);
     }
 
     @Override
