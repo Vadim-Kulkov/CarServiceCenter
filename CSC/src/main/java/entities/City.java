@@ -1,10 +1,19 @@
 package entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class City {
 
     @Column
@@ -20,35 +29,19 @@ public class City {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<CarServiceCenter> centers;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Boolean getDefaultCity() {
-        return defaultCity;
-    }
-
-    public void setDefaultCity(Boolean defaultCity) {
-        this.defaultCity = defaultCity;
-    }
-
     @Column(name = "defaultCity")
     public String getName() {
         return name;
     }
 
-    public void setName(String title) {
-        this.name = title;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         City city = (City) o;
         return Objects.equals(name, city.name)
                 && code.equals(city.code)

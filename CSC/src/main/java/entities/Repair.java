@@ -1,9 +1,18 @@
 package entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Repair {
 
     @Id
@@ -20,34 +29,14 @@ public class Repair {
     @JoinColumn(name = "CarServiceCenter", nullable = false)
     private CarServiceCenter center;
 
-    public CarServiceCenter getCenter() {
-        return center;
-    }
-
-    public void setCenter(CarServiceCenter center) {
-        this.center = center;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Repair repair = (Repair) o;
         return description.equals(repair.description)
                 && employee.equals(repair.employee)

@@ -13,9 +13,8 @@ public class HibernateUtil {
 
     static {
 
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure()
-                .build();
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+
         try {
             sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         } catch (Exception e) {
@@ -24,15 +23,13 @@ public class HibernateUtil {
     }
 
     /**
-     *
-     *
-     * @return sessionFactory
+     * @return SessionFactory
      */
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    public Session getSession() {
-        return sessionFactory.getCurrentSession();
+    public static Session getSession() {
+        return sessionFactory.openSession();
     }
 }

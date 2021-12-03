@@ -1,47 +1,66 @@
 package dao;
 
 import entities.CarServiceCenter;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import service.Dao;
-import utils.HibernateUtil;
 
 import org.hibernate.query.Query;
+
 import java.util.List;
 
+@AllArgsConstructor
 public class CarServiceCenterDao implements Dao<CarServiceCenter, String> {
 
     Session session;
 
-    public CarServiceCenterDao(Session session) {
-        this.session = session;
+    @Override
+    public CarServiceCenter get(String name) {
+        session.beginTransaction();
+        CarServiceCenter result = session.find(CarServiceCenter.class, name);
+        session.getTransaction().commit();
+        return result;
     }
 
     @Override
-    public CarServiceCenter get(String id) {
-        return session.find(CarServiceCenter.class, id);
-    }
-
-    @Override
-    public List<CarServiceCenter> getAll() {
-        Query query = session.createQuery("select e from CarServiceCenter e");
+    public List<CarServiceCenter> getAllAsList() {
+        Query<CarServiceCenter> query = session.createQuery("select e from CarServiceCenter e");
         return query.getResultList();
     }
 
     @Override
     public void save(CarServiceCenter carServiceCenter) {
-        session.update(carServiceCenter);
-        session.beginTransaction().commit();
+        try {
+            session.beginTransaction();
+            session.save(carServiceCenter);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void update(CarServiceCenter carServiceCenterDao) {
-        session.update(carServiceCenterDao);
-        session.beginTransaction().commit();
+    public void update(CarServiceCenter carServiceCenter) {
+        try {
+            session.beginTransaction();
+            session.update(carServiceCenter);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(CarServiceCenter carServiceCenter) {
-        session.remove(carServiceCenter);
-        session.beginTransaction().commit();
+        try {
+            session.beginTransaction();
+            session.remove(carServiceCenter);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 }

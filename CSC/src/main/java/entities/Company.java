@@ -1,27 +1,30 @@
 package entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @MappedSuperclass
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Company extends Customer {
 
     @Id
     @Column(nullable = false, unique = true)
     private String inn;
 
-    public String getInn() {
-        return inn;
-    }
-
-    public void setInn(String inn) {
-        this.inn = inn;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
