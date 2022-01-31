@@ -3,8 +3,8 @@ package entities;
 import org.junit.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -39,7 +39,7 @@ public class EmployeeTest {
 
     @Test
     public void setBirthDate() {
-        Date expected = new Date();
+        LocalDate expected = LocalDate.now();
         employee.setBirthDate(expected);
         assertEquals(expected, employee.getBirthDate());
     }

@@ -21,7 +21,7 @@ public class CompanyTest {
     @Test
     public void setInn() {
         String expected = "expected_value";
-        company.setInn(expected);
-        assertEquals(expected, company.getInn());
+        company.setLocalId(expected);
+        assertEquals(expected, company.getLocalId());
     }
 }

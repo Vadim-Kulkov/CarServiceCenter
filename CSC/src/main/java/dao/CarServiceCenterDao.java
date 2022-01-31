@@ -18,7 +18,7 @@ public class CarServiceCenterDao implements Dao<CarServiceCenter, String> {
     public CarServiceCenter get(String name) {
         session.beginTransaction();
         CarServiceCenter result = session.find(CarServiceCenter.class, name);
-        session.getTransaction().commit();
+        session.getTransaction();
         return result;
     }
 

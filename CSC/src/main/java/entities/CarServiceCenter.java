@@ -33,7 +33,7 @@ public class CarServiceCenter {
     @Column(nullable = false)
     private String address;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Company_Customers",
             joinColumns = @JoinColumn(name = "Customer_phone", referencedColumnName = "phone"),
             inverseJoinColumns = @JoinColumn(name = "Service_name", referencedColumnName = "name")

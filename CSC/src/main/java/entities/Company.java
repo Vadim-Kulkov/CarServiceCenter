@@ -18,7 +18,7 @@ public class Company extends Customer {
 
     @Id
     @Column(nullable = false, unique = true)
-    private String inn;
+    private String localId;
 
     @Override
     public boolean equals(Object o) {
@@ -29,11 +29,11 @@ public class Company extends Customer {
             return false;
         }
         Company company = (Company) o;
-        return inn.equals(company.inn);
+        return localId.equals(company.localId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(inn);
+        return Objects.hash(localId);
     }
 }
