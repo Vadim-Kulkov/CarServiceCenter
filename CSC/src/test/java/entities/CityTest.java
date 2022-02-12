@@ -9,12 +9,12 @@ public class CityTest {
     private static City city;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         city = new City();
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDown() {
         city = null;
     }
 

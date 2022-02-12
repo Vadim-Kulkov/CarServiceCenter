@@ -14,7 +14,7 @@ public class CustomerTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        customer = new Customer();
+        customer = new Individual();
         center = new CarServiceCenter();
     }
 

@@ -6,15 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "city")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class City {
+public class City implements Serializable {
 
     @Column
     private String name;
@@ -26,7 +28,7 @@ public class City {
     @Column
     private Boolean defaultCity;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city", cascade = CascadeType.REFRESH)
     private List<CarServiceCenter> centers;
 
     @Column(name = "defaultCity")
@@ -43,13 +45,11 @@ public class City {
             return false;
         }
         City city = (City) o;
-        return Objects.equals(name, city.name)
-                && code.equals(city.code)
-                && Objects.equals(defaultCity, city.defaultCity);
+        return code.equals(city.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, code, defaultCity);
+        return Objects.hash(code);
     }
 }

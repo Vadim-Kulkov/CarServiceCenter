@@ -1,58 +1,81 @@
 package dao;
 
-import entities.City;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import service.Dao;
-import java.util.List;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
+import entities.City;
+import service.Dao;
+
+import java.util.List;
+import java.util.Objects;
+
+import utils.JpaUtil;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 public class CityDao implements Dao<City, String> {
 
-    private Session session;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    public City get(String code) {
-        return session.find(City.class, code);
-    }
-
-    @Override
-    public List<City> getAllAsList() {
-        Query<City> query = session.createQuery("select e from City e");
-        return query.getResultList();
-    }
-
-    @Override
-    public void save(City city) {
+    public City getById(String code) {
         try {
-            session.beginTransaction();
-            session.save(city);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            return entityManager.find(City.class, code);
+        } finally {
+            entityManager.close();
         }
     }
 
     @Override
-    public void update(City city) {
+    public List<City> getAllAsList() {
         try {
-            session.beginTransaction();
-            session.update(city);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            return entityManager.createQuery("FROM City", City.class).getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public void save(City city) {
+        Objects.requireNonNull(city, "City must be not null");
+
+        try {
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.persist(city);
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public City update(City city) {
+        try {
+            City result;
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            result = entityManager.merge(city);
+            entityManager.getTransaction().commit();
+            return result;
+        } finally {
+            entityManager.close();
         }
     }
 
     @Override
     public void delete(City city) {
         try {
-            session.beginTransaction();
-            session.remove(city);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.remove(entityManager.contains(city) ? city : entityManager.merge(city));
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
         }
     }
 }

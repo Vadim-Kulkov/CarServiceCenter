@@ -3,17 +3,19 @@ package entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "employee")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Employee {
+public class Employee implements Serializable {
 
     @Column(nullable = false)
     private String firstName;
@@ -31,7 +33,7 @@ public class Employee {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "CarServiceCenter")
     private CarServiceCenter center;
 
@@ -50,14 +52,12 @@ public class Employee {
         return firstName.equals(employee.firstName)
                 && lastName.equals(employee.lastName)
                 && birthDate.equals(employee.birthDate)
-                && salary.equals(employee.salary)
                 && email.equals(employee.email)
-                && center.equals(employee.center)
-                && Objects.equals(repairs, employee.repairs);
+                && center.equals(employee.center);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, salary, email, center, repairs);
+        return Objects.hash(firstName, lastName, birthDate,email, center);
     }
 }

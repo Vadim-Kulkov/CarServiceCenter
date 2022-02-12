@@ -1,66 +1,83 @@
 package dao;
 
 import entities.CarServiceCenter;
-import lombok.AllArgsConstructor;
-import org.hibernate.Session;
 import service.Dao;
 
-import org.hibernate.query.Query;
+import utils.JpaUtil;
 
+import javax.persistence.EntityManager;
+
+import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Objects;
 
-@AllArgsConstructor
 public class CarServiceCenterDao implements Dao<CarServiceCenter, String> {
 
-    Session session;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    public CarServiceCenter get(String name) {
-        session.beginTransaction();
-        CarServiceCenter result = session.find(CarServiceCenter.class, name);
-        session.getTransaction();
-        return result;
-    }
-
-    @Override
-    public List<CarServiceCenter> getAllAsList() {
-        Query<CarServiceCenter> query = session.createQuery("select e from CarServiceCenter e");
-        return query.getResultList();
-    }
-
-    @Override
-    public void save(CarServiceCenter carServiceCenter) {
+    public CarServiceCenter getById(String name) {
         try {
-            session.beginTransaction();
-            session.save(carServiceCenter);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            return entityManager.find(CarServiceCenter.class, name);
+        } finally {
+            entityManager.close();
         }
     }
 
     @Override
-    public void update(CarServiceCenter carServiceCenter) {
+    public List<CarServiceCenter> getAllAsList() {
         try {
-            session.beginTransaction();
-            session.update(carServiceCenter);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            return entityManager
+                    .createQuery("SELECT u FROM CarServiceCenter u", CarServiceCenter.class)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public void save(CarServiceCenter carServiceCenter) {
+        Objects.requireNonNull(carServiceCenter, "CarServiceCenter must be not null");
+
+        try {
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.persist(carServiceCenter);
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public CarServiceCenter update(CarServiceCenter carServiceCenter) {
+        try {
+            CarServiceCenter result;
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            result = entityManager.merge(carServiceCenter);
+            entityManager.getTransaction().commit();
+            return result;
+        } finally {
+            entityManager.close();
         }
     }
 
     @Override
     public void delete(CarServiceCenter carServiceCenter) {
         try {
-            session.beginTransaction();
-            session.remove(carServiceCenter);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
+            entityManager = JpaUtil.createEntityManager();
+            entityManager.getTransaction().begin();
+            entityManager.remove(entityManager.contains(carServiceCenter) ? carServiceCenter
+                    : entityManager.merge(carServiceCenter));
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
         }
     }
 }

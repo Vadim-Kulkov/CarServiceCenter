@@ -1,21 +1,23 @@
 package entities;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "customer")
+@Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Customer {
+public class Customer implements Serializable {
 
     @Column(nullable = false)
     private String name;
@@ -39,15 +41,14 @@ public class Customer {
             return false;
         }
         Customer customer = (Customer) o;
-        return name.equals(customer.name)
-                && email.equals(customer.email)
-                && phone.equals(customer.phone)
-                && centers.equals(customer.centers);
+        return name.equals(customer.name) &&
+                phone.equals(customer.phone) &&
+                email.equals(customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, phone, centers);
+        return Objects.hash(name, phone, email);
     }
 }
 

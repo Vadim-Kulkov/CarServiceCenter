@@ -1,20 +1,19 @@
 package entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "carservicecenter")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class CarServiceCenter {
+public class CarServiceCenter implements Serializable {
 
     @Id
     @Column(unique = true, nullable = false)
@@ -26,7 +25,7 @@ public class CarServiceCenter {
     @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)
     private List<Employee> employees;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "Local_city", nullable = false)
     private City city;
 
@@ -54,16 +53,12 @@ public class CarServiceCenter {
         }
         CarServiceCenter that = (CarServiceCenter) o;
         return name.equals(that.name)
-                && phone.equals(that.phone)
-                && Objects.equals(employees, that.employees)
                 && city.equals(that.city)
-                && address.equals(that.address)
-                && Objects.equals(customers, that.customers)
-                && Objects.equals(repairs, that.repairs);
+                && address.equals(that.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, employees, city, address, customers, repairs);
+        return Objects.hash(name, city, address);
     }
 }

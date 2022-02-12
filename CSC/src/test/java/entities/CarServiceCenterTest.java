@@ -21,7 +21,7 @@ public class CarServiceCenterTest {
     public static void setUp() throws Exception {
         center = new CarServiceCenter();
         city = new City();
-        customer = new Customer();
+        customer = new Individual();
         employee = new Employee();
         repair = new Repair();
     }

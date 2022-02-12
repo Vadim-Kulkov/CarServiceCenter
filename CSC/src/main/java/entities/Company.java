@@ -6,17 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@MappedSuperclass
+@Table(name = "company")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Company extends Customer {
+public class Company extends Customer implements Serializable {
 
-    @Id
     @Column(nullable = false, unique = true)
     private String localId;
 

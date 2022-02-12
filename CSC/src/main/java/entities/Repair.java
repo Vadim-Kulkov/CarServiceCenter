@@ -6,26 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Table(name = "repair")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Repair {
+public class Repair implements Serializable {
 
     @Id
     @Column(unique = true, nullable = false)
     private String description;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Worker", nullable = false)
     private Employee employee;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CarServiceCenter", nullable = false)
     private CarServiceCenter center;
 
