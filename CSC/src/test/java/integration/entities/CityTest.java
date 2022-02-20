@@ -1,5 +1,6 @@
-package entities;
+package integration.entities;
 
+import entities.City;
 import org.junit.*;
 
 import static org.junit.Assert.*;

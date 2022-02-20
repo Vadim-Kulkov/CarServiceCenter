@@ -1,5 +1,7 @@
-package dao;
+package integration.dao;
 
+import dao.CarServiceCenterDao;
+import dao.CityDao;
 import entities.CarServiceCenter;
 import entities.City;
 import org.junit.*;

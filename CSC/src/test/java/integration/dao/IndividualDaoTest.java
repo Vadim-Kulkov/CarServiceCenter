@@ -1,12 +1,10 @@
-package dao;
+package integration.dao;
 
-import entities.Company;
+import dao.IndividualDao;
 import entities.Individual;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 

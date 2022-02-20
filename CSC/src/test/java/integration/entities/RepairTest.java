@@ -1,5 +1,8 @@
-package entities;
+package integration.entities;
 
+import entities.CarServiceCenter;
+import entities.Employee;
+import entities.Repair;
 import org.junit.*;
 
 import static org.junit.Assert.*;

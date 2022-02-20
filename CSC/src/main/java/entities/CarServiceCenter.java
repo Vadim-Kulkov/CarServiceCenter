@@ -37,7 +37,6 @@ public class CarServiceCenter implements Serializable {
             joinColumns = @JoinColumn(name = "Customer_phone", referencedColumnName = "phone"),
             inverseJoinColumns = @JoinColumn(name = "Service_name", referencedColumnName = "name")
     )
-
     private List<Customer> customers;
 
     @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)

@@ -3,7 +3,6 @@ package dao;
 import entities.Company;
 import service.Dao;
 import utils.JpaUtil;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;

@@ -1,7 +1,6 @@
 package entities;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -58,6 +57,6 @@ public class Employee implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate,email, center);
+        return Objects.hash(firstName, lastName, birthDate, email, center);
     }
 }

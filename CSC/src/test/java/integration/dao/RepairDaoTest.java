@@ -1,5 +1,9 @@
-package dao;
+package integration.dao;
 
+import dao.CarServiceCenterDao;
+import dao.CityDao;
+import dao.EmployeeDao;
+import dao.RepairDao;
 import entities.CarServiceCenter;
 import entities.City;
 import entities.Employee;

@@ -1,14 +1,10 @@
 package dao;
 
-
 import entities.City;
 import service.Dao;
-
 import java.util.List;
 import java.util.Objects;
-
 import utils.JpaUtil;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

@@ -2,11 +2,8 @@ package dao;
 
 import entities.CarServiceCenter;
 import service.Dao;
-
 import utils.JpaUtil;
-
 import javax.persistence.EntityManager;
-
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Objects;
@@ -32,8 +29,7 @@ public class CarServiceCenterDao implements Dao<CarServiceCenter, String> {
         try {
             entityManager = JpaUtil.createEntityManager();
             entityManager.getTransaction().begin();
-            return entityManager
-                    .createQuery("SELECT u FROM CarServiceCenter u", CarServiceCenter.class)
+            return entityManager.createQuery("SELECT u FROM CarServiceCenter u", CarServiceCenter.class)
                     .getResultList();
         } finally {
             entityManager.close();

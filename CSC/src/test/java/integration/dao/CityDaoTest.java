@@ -1,5 +1,6 @@
-package dao;
+package integration.dao;
 
+import dao.CityDao;
 import entities.City;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

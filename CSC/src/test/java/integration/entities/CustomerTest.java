@@ -1,5 +1,8 @@
-package entities;
+package integration.entities;
 
+import entities.CarServiceCenter;
+import entities.Customer;
+import entities.Individual;
 import org.junit.*;
 
 import java.util.ArrayList;
